@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nike — Communications Intelligence System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--color-old-lace:#FAF5EA;--color-violet:#1A064B;--color-zaffre:#0C1D98;--color-periwinkle:#DCD6F7;--color-cinerous:#AA988F;--color-tropical-indigo:#7884FF;--color-orange:#FF4F01;--bg-primary:#FAF5EA;--bg-secondary:#F4EDD9;--bg-card:#FFFFFF;--text-primary:#1A064B;--text-secondary:rgba(26,6,75,0.72);--text-muted:#AA988F;--text-inverse:#FAF5EA;--border-subtle:rgba(26,6,75,0.06);--border-default:rgba(26,6,75,0.12);--border-strong:rgba(26,6,75,0.22);--sharpen:#0C1D98;--sharpen-dim:rgba(12,29,152,0.06);--sharpen-border:rgba(12,29,152,0.22);--new:#FF4F01;--new-dim:rgba(255,79,1,0.07);--new-border:rgba(255,79,1,0.28);--accent-violet-dim:rgba(26,6,75,0.07);--font-sans:'Archivo',-apple-system,system-ui,sans-serif;--font-display:'Syne','Archivo',sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:var(--font-sans);font-size:14px;line-height:1.55;color:var(--text-primary);background:var(--bg-primary);}
+.grid-bg{background-image:linear-gradient(var(--border-subtle) 1px,transparent 1px),linear-gradient(90deg,var(--border-subtle) 1px,transparent 1px);background-size:48px 48px;}
+.noise-overlay{position:fixed;inset:0;pointer-events:none;opacity:0.04;z-index:100;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");mix-blend-mode:multiply;}
+.plus-grid-violet{background-color:var(--color-violet);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cpath d='M14 10v8M10 14h8' stroke='%23DCD6F7' stroke-opacity='0.16' stroke-width='1'/%3E%3C/svg%3E");}
+.animated-gradient-line{height:1px;background:linear-gradient(90deg,var(--color-orange),var(--color-zaffre),var(--color-tropical-indigo),var(--color-orange));background-size:300% 100%;animation:gradShift 4s ease-in-out infinite;}
+@keyframes gradShift{0%,100%{background-position:0% 50%;}50%{background-position:100% 50%;}}
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
+header.site{position:sticky;top:0;z-index:50;border-bottom:1px solid var(--border-subtle);background:rgba(244,237,217,0.82);backdrop-filter:blur(6px);}
+header.site .wrap{display:flex;align-items:center;justify-content:space-between;height:52px;}
+.wordmark{font-family:var(--font-display);font-weight:800;font-size:15px;letter-spacing:-0.015em;}
+.header-meta{display:flex;align-items:center;gap:14px;font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-muted);}
+.vrule{width:1px;height:20px;background:var(--border-default);}
+.status-dot{width:6px;height:6px;border-radius:50%;background:var(--color-tropical-indigo);box-shadow:0 0 6px rgba(120,132,255,0.8);display:inline-block;}
+.hero{padding:64px 0 44px;position:relative;overflow:hidden;}
+.blob{position:absolute;width:420px;height:420px;border-radius:50%;filter:blur(130px);opacity:0.06;pointer-events:none;}
+.blob.a{background:var(--color-orange);top:-140px;right:-80px;}
+.blob.b{background:var(--color-zaffre);bottom:-180px;left:-100px;}
+.eyebrow{font-size:10px;text-transform:uppercase;letter-spacing:0.22em;font-weight:600;color:var(--color-orange);margin-bottom:14px;}
+.hero h1{font-family:var(--font-display);font-weight:800;font-size:clamp(34px,5.5vw,58px);line-height:1.02;letter-spacing:-0.02em;max-width:860px;}
+.hero .sub{font-family:var(--font-display);font-weight:600;font-size:clamp(16px,2vw,20px);line-height:1.35;color:var(--color-tropical-indigo);margin-top:14px;max-width:680px;}
+.hero .lede{margin-top:18px;max-width:660px;color:var(--text-secondary);font-size:15px;}
+.badge{font-size:10px;text-transform:uppercase;letter-spacing:0.08em;padding:4px 10px;border-radius:4px;font-weight:600;border:1px solid rgba(26,6,75,0.24);background:var(--accent-violet-dim);color:var(--color-violet);white-space:nowrap;}
+.badge .rank{color:var(--color-zaffre);font-weight:700;margin-right:5px;}
+.section{padding:56px 0;}
+.section-head{margin-bottom:28px;}
+.section-head h2{font-family:var(--font-display);font-weight:700;font-size:clamp(22px,3.2vw,34px);letter-spacing:-0.015em;line-height:1.1;}
+.section-head p{margin-top:10px;font-size:14px;color:var(--text-secondary);max-width:660px;}
+.challenge-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:24px;}
+.challenge-card{background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:18px 20px;position:relative;overflow:hidden;}
+.challenge-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--color-orange);}
+.challenge-card .cc-title{font-family:var(--font-display);font-weight:700;font-size:15px;letter-spacing:-0.01em;margin-bottom:6px;padding-left:14px;}
+.challenge-card .cc-body{font-size:12.5px;color:var(--text-secondary);padding-left:14px;line-height:1.5;}
+.challenge-note{margin-top:20px;font-size:13px;color:var(--text-muted);font-style:italic;text-align:center;}
+.two-layer{display:flex;flex-direction:column;gap:10px;margin-top:28px;}
+.layer-block{border-radius:10px;padding:24px 28px;border:1.5px solid;}
+.layer-block.l1{border-color:var(--color-tropical-indigo);background:rgba(120,132,255,0.06);}
+.layer-block.l2{border-color:var(--color-orange);background:rgba(255,79,1,0.05);}
+.layer-block .lb-tag{font-size:9px;text-transform:uppercase;letter-spacing:0.2em;font-weight:700;margin-bottom:6px;}
+.layer-block.l1 .lb-tag{color:var(--color-tropical-indigo);}
+.layer-block.l2 .lb-tag{color:var(--color-orange);}
+.layer-block h3{font-family:var(--font-display);font-weight:700;font-size:22px;letter-spacing:-0.01em;color:var(--text-primary);margin-bottom:6px;}
+.layer-block .lb-sub{font-size:13px;color:var(--text-secondary);}
+.layer-connector{display:flex;align-items:center;justify-content:center;height:28px;}
+.layer-connector span{width:10px;height:10px;border-radius:50%;background:var(--color-orange);display:block;}
+.answer-outcome{margin-top:18px;padding:14px 20px;background:var(--bg-secondary);border-radius:6px;font-size:13px;color:var(--text-secondary);font-style:italic;text-align:center;}
+.framing-intro{font-size:14px;color:var(--text-secondary);max-width:740px;margin-bottom:18px;}
+.framing-intro strong{color:var(--text-primary);font-weight:600;}
+.framing-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.frame-card{border-radius:8px;padding:16px 20px;border:1px solid;}
+.frame-card.sharpen{background:var(--sharpen-dim);border-color:var(--sharpen-border);}
+.frame-card.new{background:var(--new-dim);border-color:var(--new-border);}
+.frame-card .fc-tag{display:inline-flex;align-items:center;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:0.16em;font-weight:700;margin-bottom:7px;}
+.frame-card.sharpen .fc-tag{color:var(--sharpen);}
+.frame-card.new .fc-tag{color:var(--new);}
+.fc-glyph{width:18px;height:18px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff;}
+.frame-card.sharpen .fc-glyph{background:var(--sharpen);}
+.frame-card.new .fc-glyph{background:var(--new);}
+.frame-card h3{font-family:var(--font-display);font-weight:700;font-size:16px;letter-spacing:-0.01em;margin-bottom:5px;}
+.frame-card p{font-size:12.5px;color:var(--text-secondary);}
+.catalog-section{padding:34px 0 8px;}
+.catalog-head{margin-bottom:18px;}
+.catalog-head .ch-title{font-family:var(--font-display);font-weight:700;font-size:26px;letter-spacing:-0.015em;}
+.catalog-head .ch-sub{font-size:13px;color:var(--text-secondary);margin-top:4px;}
+.catalog{display:grid;grid-template-columns:332px 1fr;gap:20px;align-items:start;}
+.pkg-index{position:sticky;top:66px;display:flex;flex-direction:column;gap:8px;}
+.pkg-item{width:100%;background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:13px 14px;cursor:pointer;text-align:left;font-family:var(--font-sans);color:var(--text-primary);display:flex;gap:12px;align-items:flex-start;transition:border-color 150ms ease,background 150ms ease;}
+.pkg-item:hover{border-color:var(--border-strong);}
+.pkg-item .pi-num{font-family:var(--font-display);font-weight:700;font-size:12px;min-width:26px;height:26px;border-radius:50%;border:1px solid var(--border-strong);display:inline-flex;align-items:center;justify-content:center;color:var(--text-secondary);}
+.pkg-item .pi-body{flex:1;min-width:0;}
+.pkg-item .pi-name{font-family:var(--font-display);font-weight:700;font-size:14px;letter-spacing:-0.01em;line-height:1.2;}
+.pkg-item .pi-one{font-size:11.5px;color:var(--text-secondary);margin-top:3px;line-height:1.4;}
+.pkg-item.active{background-color:var(--color-violet);border-color:var(--color-violet);color:var(--color-old-lace);}
+.pkg-item.active .pi-num{border-color:rgba(220,214,247,0.5);color:var(--color-old-lace);background:rgba(26,6,75,0.4);}
+.pkg-item.active .pi-name{color:var(--color-old-lace);}
+.pkg-item.active .pi-one{color:var(--color-periwinkle);}
+.pkg-detail-wrap{min-height:200px;}
+.pkg-panel{display:none;}
+.pkg-panel.active{display:block;animation:fadeUp 280ms ease both;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.pkg-card{background:var(--bg-card);border:1px solid var(--border-default);border-radius:10px;padding:26px 28px;}
+.pkg-card .pc-num{font-size:10px;text-transform:uppercase;letter-spacing:0.18em;font-weight:600;color:var(--color-orange);margin-bottom:6px;}
+.pkg-card .pc-title{font-family:var(--font-display);font-weight:800;font-size:26px;letter-spacing:-0.015em;line-height:1.1;}
+.pc-getstrip{margin-top:16px;border-left:3px solid var(--color-orange);background:var(--bg-secondary);border-radius:0 6px 6px 0;padding:12px 16px;}
+.pc-getstrip .gs-label{font-size:10px;text-transform:uppercase;letter-spacing:0.16em;font-weight:700;color:var(--color-orange);margin-bottom:3px;}
+.pc-getstrip .gs-text{font-size:15px;color:var(--text-primary);font-weight:500;line-height:1.4;}
+.pc-point{margin-top:12px;padding:10px 14px;border-left:2px solid var(--color-orange);background:var(--new-dim);border-radius:0 4px 4px 0;}
+.pc-point b{color:var(--new);font-weight:700;text-transform:uppercase;letter-spacing:0.12em;font-size:9.5px;display:block;margin-bottom:3px;}
+.pc-point span{font-size:12.5px;color:var(--text-secondary);}
+.pc-point span strong{color:var(--text-primary);font-weight:600;}
+.pc-badges{display:flex;gap:6px;flex-wrap:wrap;margin-top:16px;}
+.pc-today{margin-top:18px;}
+.pc-today .today-label{font-size:10px;text-transform:uppercase;letter-spacing:0.16em;font-weight:600;color:var(--color-cinerous);margin-bottom:5px;}
+.pc-today .today-text{font-size:13px;color:var(--text-secondary);}
+.pc-tracks{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+.track{border-radius:7px;padding:14px 16px;border:1px solid;}
+.track.sharpen{background:var(--sharpen-dim);border-color:var(--sharpen-border);}
+.track.new{background:var(--new-dim);border-color:var(--new-border);}
+.track .track-label{display:inline-flex;align-items:center;gap:7px;font-size:10px;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;margin-bottom:9px;}
+.track.sharpen .track-label{color:var(--sharpen);}
+.track.new .track-label{color:var(--new);}
+.track-glyph{width:16px;height:16px;border-radius:4px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#fff;line-height:1;}
+.track.sharpen .track-glyph{background:var(--sharpen);}
+.track.new .track-glyph{background:var(--new);}
+.track ul{list-style:none;}
+.track li{position:relative;padding-left:16px;margin-bottom:7px;font-size:12.5px;color:var(--text-primary);line-height:1.45;}
+.track li:last-child{margin-bottom:0;}
+.track li::before{position:absolute;left:0;top:0;font-weight:700;}
+.track.sharpen li::before{content:"\203A";color:var(--sharpen);}
+.track.new li::before{content:"+";color:var(--new);font-size:11px;top:1px;}
+.pc-footer{display:flex;flex-wrap:wrap;gap:18px;margin-top:18px;align-items:flex-start;}
+.pc-works{flex:1;min-width:220px;}
+.pc-works .w-label{font-size:10px;text-transform:uppercase;letter-spacing:0.16em;font-weight:600;color:var(--text-muted);margin-bottom:7px;}
+.w-chips{display:flex;flex-wrap:wrap;gap:6px;}
+.w-chip{font-size:11px;padding:3px 9px;border-radius:999px;border:1px solid var(--border-default);color:var(--text-secondary);background:var(--bg-primary);}
+.w-chip b{color:var(--color-zaffre);font-weight:700;margin-right:4px;}
+.pc-open{flex:1;min-width:240px;font-size:12.5px;color:var(--text-secondary);font-style:italic;border-left:2px solid var(--color-tropical-indigo);padding:2px 0 2px 12px;}
+.pc-open b{font-style:normal;font-weight:600;color:var(--color-zaffre);text-transform:uppercase;letter-spacing:0.1em;font-size:9.5px;display:block;margin-bottom:3px;}
+.dark-section{padding:56px 0;}
+.dark-section h2{font-family:var(--font-display);font-weight:700;font-size:clamp(20px,3vw,30px);letter-spacing:-0.015em;color:var(--color-old-lace);margin-bottom:12px;max-width:680px;line-height:1.2;}
+.dark-section .ds-sub{font-size:13.5px;color:var(--color-periwinkle);max-width:720px;line-height:1.55;}
+.ios-principles{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
+.ios-card{border-radius:8px;padding:20px;border:1px solid rgba(220,214,247,0.2);background:rgba(220,214,247,0.05);}
+.ios-card .ic-bar{width:32px;height:3px;background:var(--color-orange);border-radius:2px;margin-bottom:12px;}
+.ios-card h4{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--color-old-lace);line-height:1.2;margin-bottom:8px;}
+.ios-card p{font-size:12px;color:var(--color-periwinkle);line-height:1.5;}
+.quote-bar{margin:28px 0;padding:18px 24px;border-left:3px solid var(--color-orange);background:rgba(220,214,247,0.06);border-radius:0 8px 8px 0;}
+.quote-bar p{font-size:14px;color:var(--color-old-lace);font-style:italic;line-height:1.55;}
+.quote-bar cite{display:block;margin-top:6px;font-size:11px;color:var(--color-periwinkle);font-style:normal;text-transform:uppercase;letter-spacing:0.12em;}
+.loops-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:28px;}
+.loop-card{background:var(--bg-card);border-radius:8px;padding:20px;border:1px solid var(--border-default);position:relative;overflow:hidden;}
+.loop-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;}
+.loop-card.lc-indigo::before{background:var(--color-tropical-indigo);}
+.loop-card.lc-zaffre::before{background:var(--color-zaffre);}
+.loop-card.lc-purple::before{background:#6B21A8;}
+.loop-card.lc-orange::before{background:var(--color-orange);}
+.loop-card .lc-num{font-family:var(--font-display);font-weight:700;font-size:26px;margin-bottom:2px;padding-left:14px;}
+.loop-card.lc-indigo .lc-num{color:var(--color-tropical-indigo);}
+.loop-card.lc-zaffre .lc-num{color:var(--color-zaffre);}
+.loop-card.lc-purple .lc-num{color:#6B21A8;}
+.loop-card.lc-orange .lc-num{color:var(--color-orange);}
+.loop-card .lc-pkgs{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-muted);padding-left:14px;margin-bottom:6px;}
+.loop-card h3{font-family:var(--font-display);font-weight:700;font-size:17px;letter-spacing:-0.01em;padding-left:14px;margin-bottom:8px;}
+.loop-card p{font-size:12.5px;color:var(--text-secondary);padding-left:14px;line-height:1.5;}
+.meeting-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
+.meeting-card{border-radius:8px;padding:20px;border:1px solid rgba(220,214,247,0.2);background:rgba(220,214,247,0.05);}
+.meeting-card .mc-phase{font-size:9px;text-transform:uppercase;letter-spacing:0.2em;font-weight:700;margin-bottom:8px;}
+.meeting-card.mc-before .mc-phase{color:var(--color-tropical-indigo);}
+.meeting-card.mc-during .mc-phase{color:#A78BFA;}
+.meeting-card.mc-after .mc-phase{color:var(--color-orange);}
+.meeting-card h4{font-family:var(--font-display);font-weight:700;font-size:16px;color:var(--color-old-lace);margin-bottom:10px;line-height:1.2;}
+.meeting-card ul{list-style:none;}
+.meeting-card li{font-size:12px;color:var(--color-periwinkle);line-height:1.5;margin-bottom:8px;padding-left:14px;position:relative;}
+.meeting-card li::before{position:absolute;left:0;top:0;font-weight:700;}
+.meeting-card.mc-before li::before{content:"›";color:var(--color-tropical-indigo);}
+.meeting-card.mc-during li::before{content:"›";color:#A78BFA;}
+.meeting-card.mc-after li::before{content:"›";color:var(--color-orange);}
+.principles-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;}
+.principle-card{background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:18px 20px;}
+.principle-card .prc-num{font-family:var(--font-display);font-weight:700;font-size:22px;color:var(--color-orange);margin-bottom:8px;}
+.principle-card h4{font-family:var(--font-display);font-weight:700;font-size:14px;letter-spacing:-0.01em;margin-bottom:6px;}
+.principle-card p{font-size:12px;color:var(--text-secondary);line-height:1.5;}
+.roadmap-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:28px;}
+.road-col{border-radius:7px;overflow:hidden;border:1px solid var(--border-default);}
+.road-col .rc-bar{height:5px;}
+.road-col .rc-inner{padding:14px;}
+.road-col .rc-phase{font-size:9px;text-transform:uppercase;letter-spacing:0.14em;font-weight:700;margin-bottom:2px;}
+.road-col .rc-months{font-size:10px;color:var(--text-muted);margin-bottom:8px;}
+.road-col .rc-title{font-family:var(--font-display);font-weight:700;font-size:14px;letter-spacing:-0.01em;margin-bottom:10px;}
+.road-col ul{list-style:none;}
+.road-col li{font-size:11px;color:var(--text-secondary);line-height:1.45;margin-bottom:8px;padding-left:10px;position:relative;}
+.road-col li::before{content:"·";position:absolute;left:0;color:var(--color-orange);}
+.engine{margin:36px 0 0;border-radius:8px;padding:28px 32px;}
+.engine h3{font-family:var(--font-display);font-weight:700;font-size:20px;letter-spacing:-0.01em;color:var(--color-old-lace);max-width:620px;line-height:1.25;}
+.engine p{margin-top:10px;font-size:13.5px;color:var(--color-periwinkle);max-width:720px;}
+.pn-reads{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px;}
+.pn-read{border:1px solid rgba(220,214,247,0.22);border-radius:7px;padding:13px 14px;background:rgba(220,214,247,0.05);}
+.pn-read .pr-tag{font-size:9.5px;text-transform:uppercase;letter-spacing:0.12em;font-weight:700;color:var(--color-orange);margin-bottom:6px;}
+.pn-read .pr-name{font-family:var(--font-display);font-weight:700;font-size:13px;color:var(--color-old-lace);line-height:1.3;margin-bottom:6px;}
+.pn-read .pr-desc{font-size:11.5px;color:var(--color-periwinkle);line-height:1.5;}
+.cta-section{padding:56px 0 0;}
+.cta-inner{border-radius:12px;padding:48px 52px;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center;}
+.cta-inner h2{font-family:var(--font-display);font-weight:800;font-size:clamp(24px,3.5vw,38px);letter-spacing:-0.02em;color:var(--color-old-lace);line-height:1.1;margin-bottom:14px;}
+.cta-inner p{font-size:13.5px;color:var(--color-periwinkle);max-width:520px;line-height:1.55;}
+.cta-stats{display:flex;flex-direction:column;gap:18px;}
+.cta-stat{text-align:center;}
+.cta-stat .cs-num{font-family:var(--font-display);font-weight:800;font-size:40px;color:var(--color-orange);line-height:1;}
+.cta-stat .cs-label{font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--color-periwinkle);margin-top:4px;}
+.cta-next{margin-top:24px;padding-top:20px;border-top:1px solid rgba(220,214,247,0.15);}
+.cta-next p{font-size:13px;color:var(--color-orange);font-weight:600;}
+footer.site{border-top:1px solid var(--border-default);padding:22px 0 36px;background:var(--bg-secondary);}
+footer.site .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;font-size:10px;text-transform:uppercase;letter-spacing:0.15em;color:var(--text-muted);}
+.mechanic{padding:54px 0 64px;}
+.mechanic h2{font-family:var(--font-display);font-weight:700;font-size:24px;letter-spacing:-0.015em;max-width:680px;line-height:1.2;}
+.mechanic-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:24px;}
+.step{background:var(--bg-card);border:1px solid var(--border-default);border-radius:8px;padding:20px;}
+.step-kicker{font-size:10px;text-transform:uppercase;letter-spacing:0.18em;font-weight:600;color:var(--color-orange);margin-bottom:8px;}
+.step h4{font-family:var(--font-display);font-weight:700;font-size:18px;letter-spacing:-0.01em;margin-bottom:8px;}
+.step p{font-size:13px;color:var(--text-secondary);}
+.step ol,.step ul{margin:10px 0 0;list-style:none;}
+.step li{font-size:12.5px;color:var(--text-primary);padding:6px 0;border-top:1px solid var(--border-subtle);}
+.step li:first-child{border-top:none;}
+.step li .li-k{font-weight:600;color:var(--color-zaffre);}
+@media(max-width:900px){.catalog{grid-template-columns:1fr;}.pkg-index{position:static;flex-direction:row;flex-wrap:wrap;}.pkg-item{width:auto;flex:1 1 calc(50% - 4px);}.pkg-item .pi-one{display:none;}.loops-grid{grid-template-columns:1fr;}.challenge-grid{grid-template-columns:1fr;}.cta-inner{grid-template-columns:1fr;}.cta-stats{flex-direction:row;justify-content:flex-start;}.roadmap-grid{grid-template-columns:1fr 1fr;}.pn-reads{grid-template-columns:1fr 1fr;}}
+@media(max-width:680px){.framing-grid{grid-template-columns:1fr;}.pc-tracks{grid-template-columns:1fr;}.mechanic-grid{grid-template-columns:1fr;}.pkg-item{flex:1 1 100%;}.pn-reads{grid-template-columns:1fr;}.ios-principles{grid-template-columns:1fr;}.meeting-grid{grid-template-columns:1fr;}.principles-grid{grid-template-columns:1fr 1fr;}.roadmap-grid{grid-template-columns:1fr;}.cta-inner{padding:32px 24px;}}
+
+
+</style>
+</head>
+<body class="grid-bg">
+<div class="noise-overlay" aria-hidden="true"></div>
+<header class="site">
+  <div class="wrap">
+    <div class="wordmark">Andus Labs</div>
+    <div class="header-meta">
+      <span>Nike Workshop</span>
+      <span class="vrule"></span>
+      <span style="display:flex;align-items:center;gap:7px;"><span class="status-dot"></span> Working Draft</span>
+    </div>
+  </div>
+</header>
+<div class="animated-gradient-line"></div>
+<section class="hero">
+  <div class="blob a"></div><div class="blob b"></div>
+  <div class="wrap">
+    <div class="eyebrow">Communications Intelligence System · Nike</div>
+    <h1>Nine packages. One operating system. Decisions that don't wait.</h1>
+    <p class="sub">A two-layer system: intelligence that gathers, and a loop that turns it into better decisions.</p>
+    <p class="lede">The Nike communications function runs on talent and hustle. This system gives it memory, sensing, and a feedback loop — so every decision is made with more context and less prep time, and the function gets smarter every cycle.</p>
+  </div>
+</section>
+<section class="section" style="padding-top:16px;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The Challenge</div>
+      <h2>Nike's comms function runs on talent and hustle.<br>But the system underneath is working against it.</h2>
+    </div>
+    <div class="challenge-grid">
+      <div class="challenge-card"><div class="cc-title">Memory lives in people</div><div class="cc-body">Approved language, past positions, coverage archives — spread across drives, email, agency decks, and the one person who happens to remember.</div></div>
+      <div class="challenge-card"><div class="cc-title">Intel arrives too late</div><div class="cc-body">Competitive narrative shifts, cultural moments, policy signals — discovered after the window to respond has already closed.</div></div>
+      <div class="challenge-card"><div class="cc-title">Prep is manual heroics</div><div class="cc-body">Earnings Q&amp;A, exec briefing books, stakeholder profiles — built by hand before every major moment, then discarded after.</div></div>
+      <div class="challenge-card"><div class="cc-title">Plans aren't stress-tested</div><div class="cc-body">The senior calendar can only hold a few pre-mortems. Most plans ship without a real adversarial read on how they'll land.</div></div>
+    </div>
+    <p class="challenge-note">The team doesn't lack skill. The system lacks memory, sensing, and a feedback loop.</p>
+  </div>
+</section>
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The Answer</div>
+      <h2>A two-layer system: intelligence that gathers, and a loop that turns it into better decisions.</h2>
+    </div>
+    <div class="two-layer">
+      <div class="layer-block l1"><div class="lb-tag">Layer 1 · Intelligence</div><h3>Nine Packages</h3><div class="lb-sub">Institutional memory · Cultural sensing · Competitive coverage · Policy watch · Stakeholder intelligence · Scenario simulation · Executive prep · Narrative testing · Campaign activation</div></div>
+      <div class="layer-connector"><span></span></div>
+      <div class="layer-block l2"><div class="lb-tag">Layer 2 · Decision Operating System</div><h3>Intelligent Operating System</h3><div class="lb-sub">Four recursive loops that use the intelligence to run better meetings, faster decisions, and a comms function that improves each cycle.</div></div>
+    </div>
+    <p class="answer-outcome"><em>Outcome: Decisions made with more context, less prep time, and a system that gets smarter every week.</em></p>
+  </div>
+</section>
+<section class="section" style="padding-top:0;padding-bottom:28px;">
+  <div class="wrap">
+    <p class="framing-intro">Every package reads the same way, because AI delivers value in two distinct ways. <strong>One is speed and relief on work the team already does.</strong> <strong>The other is sharper insight and reach that was not available at all.</strong></p>
+    <div class="framing-grid">
+      <div class="frame-card sharpen"><span class="fc-tag"><span class="fc-glyph">&rsaquo;</span> Sharpen what Nike does today</span><h3>Less time, less heroic effort, more consistency</h3><p>The work never stops: monitoring, prep, briefs, statements, the earnings cycle. AI takes the grind and the bottlenecks out of it, so the team moves faster and the output holds together.</p></div>
+      <div class="frame-card new"><span class="fc-tag"><span class="fc-glyph">+</span> Do what wasn't possible before</span><h3>Insight and reach beyond what hands can do</h3><p>Some things the team cannot do today — not for lack of skill, but because no person can read that much, rehearse that often, or react that fast.</p></div>
+    </div>
+  </div>
+</section>
+<section class="catalog-section">
+  <div class="wrap">
+    <div class="catalog-head">
+      <div class="eyebrow">Layer 1 · Intelligence</div>
+      <div class="ch-title">The nine packages</div>
+      <div class="ch-sub">Select a package on the left to open it. Each is self-contained, and several feed one another.</div>
+    </div>
+    <div class="catalog">
+      <div class="pkg-index" role="tablist">
+        <button class="pkg-item active" role="tab" aria-selected="true" data-target="pkg-1"><span class="pi-num">1</span><span class="pi-body"><span class="pi-name">Institutional Memory</span><span class="pi-one">Ask anything Nike has ever said and get a sourced answer.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-2"><span class="pi-num">2</span><span class="pi-body"><span class="pi-name">Cultural &amp; Trend Monitoring</span><span class="pi-one">What is moving in culture, and where Nike can credibly join.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-3"><span class="pi-num">3</span><span class="pi-body"><span class="pi-name">Competitive Coverage Tracking</span><span class="pi-one">How competitors are covered and what moves they are making.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-4"><span class="pi-num">4</span><span class="pi-body"><span class="pi-name">Policy &amp; Regulatory Watch</span><span class="pi-one">Early warning on currents that arrive as comms problems.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-5"><span class="pi-num">5</span><span class="pi-body"><span class="pi-name">Reporter &amp; Stakeholder Intelligence</span><span class="pi-one">A current profile on anyone who matters, fast.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-6"><span class="pi-num">6</span><span class="pi-body"><span class="pi-name">Scenario Planning &amp; Red Teaming</span><span class="pi-one">How a plan will be received and where it breaks, before you commit.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-7"><span class="pi-num">7</span><span class="pi-body"><span class="pi-name">Executive Comms &amp; Earnings Simulation</span><span class="pi-one">A sim of the earnings call and the tough interview, before they are live.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-8"><span class="pi-num">8</span><span class="pi-body"><span class="pi-name">Living Narrative Pressure Testing</span><span class="pi-one">A narrative you can test any time, not left on a shelf.</span></span></button>
+        <button class="pkg-item" role="tab" aria-selected="false" data-target="pkg-9"><span class="pi-num">9</span><span class="pi-body"><span class="pi-name">Campaign Ideation &amp; Agency Mobilization</span><span class="pi-one">Idea to a sharp, stress-tested brief in hours.</span></span></button>
+      </div>
+      <div class="pkg-detail-wrap">
+        <div class="pkg-panel active" id="pkg-1"><div class="pkg-card"><div class="pc-num">Package 1 · Foundation</div><div class="pc-title">Institutional Memory</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A record of everything Nike has said and decided that you can ask questions of, and get a sourced answer back.</div></div><div class="pc-badges"><span class="badge"><span class="rank">1</span>Earnings Cycle</span><span class="badge"><span class="rank">3</span>Narrative Control</span><span class="badge"><span class="rank">5</span>Media Relations</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Message houses and approved language. Q&amp;A banks and standby statements. Earnings transcripts, position papers, the coverage archive. Most of it spread across drives, email, agency decks, and the people who happen to remember.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Ask plain questions of everything Nike has said and get a sourced answer in seconds, instead of hunting across drives</li><li>Pull the approved language on any topic without chasing the one person who knows where it lives</li><li>Check a draft against past positions before it ships, so Nike does not contradict itself</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>A record that keeps itself current as new statements, transcripts, and coverage land — memory stops leaving when people do</li><li>Automatic flags when a new announcement collides with something Nike said before</li><li>See where messaging has drifted across regions and channels at a glance</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Feeds</div><div class="w-chips"><span class="w-chip">Every other package draws on this</span></div></div><div class="pc-open"><b>Open the conversation</b>Where does institutional knowledge live today, and who can actually find it under deadline?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-2"><div class="pkg-card"><div class="pc-num">Package 2 · Sensing Cluster</div><div class="pc-title">Cultural &amp; Trend Monitoring</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A regular read on what is moving in culture, who is carrying it, and where Nike can credibly join in.</div></div><div class="pc-point"><b>Why it matters</b><span>The value is not a faster feed. It is the <strong>strategic synthesis on top</strong>: what a trend means for Nike and what to do about it, so the read is immediately usable.</span></div><div class="pc-badges"><span class="badge"><span class="rank">4</span>World Cup</span><span class="badge"><span class="rank">6</span>Content Creation</span><span class="badge"><span class="rank">3</span>Narrative Control</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Trend monitoring, the influencer and creator landscape, and the informal "did anyone see this" radar that depends on someone noticing in time.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Pull scattered cultural feeds into one read the team can act on</li><li>Get the signal explained, not just a pile of clips and posts to sort through</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Spot credible voices who could carry Nike's message but currently do not</li><li>Connect a live cultural moment to a content or campaign opening while it is still open</li><li>Track a trend's trajectory early enough to lead it rather than follow</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Works with</div><div class="w-chips"><span class="w-chip"><b>8</b>Living Narrative</span><span class="w-chip"><b>9</b>Campaign &amp; Agency</span></div></div><div class="pc-open"><b>Open the conversation</b>What cultural moment did Nike catch too late, and what would catching it early have been worth?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-3"><div class="pkg-card"><div class="pc-num">Package 3 · Sensing Cluster</div><div class="pc-title">Competitive Coverage Tracking</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A continuous read on how competitors are being covered and what narrative moves they are making.</div></div><div class="pc-point"><b>Why it matters</b><span>The value is not a faster clip report. It is the <strong>strategic synthesis on top</strong>: what a competitor's move means for Nike and where to respond.</span></div><div class="pc-badges"><span class="badge"><span class="rank">5</span>Media Relations</span><span class="badge"><span class="rank">7</span>Campaign Ideation</span><span class="badge"><span class="rank">4</span>World Cup</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Share of voice, competitive coverage benchmarking, and the deck someone assembles by hand before a big planning moment.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Share of voice and competitive coverage compiled and interpreted automatically, not hand-built each quarter</li><li>Understand what a competitor's move means, not just that it happened</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Catch a competitor's narrative shift early, while there is still room to respond</li><li>See by topic where Nike is winning or losing the coverage contest</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Works with</div><div class="w-chips"><span class="w-chip"><b>6</b>Scenario &amp; Red Team</span><span class="w-chip"><b>9</b>Campaign &amp; Agency</span></div></div><div class="pc-open"><b>Open the conversation</b>When a competitor changed their story last year, how long before the team noticed?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-4"><div class="pkg-card"><div class="pc-num">Package 4 · Sensing Cluster</div><div class="pc-title">Policy &amp; Regulatory Watch</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">Early warning on the regulatory and political currents that tend to arrive as communications problems.</div></div><div class="pc-point"><b>Why it matters</b><span>The value is not a faster alert stream. It is the <strong>strategic synthesis on top</strong>: what a development means for Nike's positions and what to say.</span></div><div class="pc-badges"><span class="badge"><span class="rank">3</span>Narrative Control</span><span class="badge"><span class="rank">5</span>Media Relations</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Policy and regulatory monitoring and issue tracking, often living with government affairs and reaching the comms team late.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>One radar across jurisdictions instead of scattered alerts</li><li>The signal translated into comms terms: what it means for Nike's positions and statements</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Be told when a regulatory or political current is about to become a comms problem</li><li>Map an issue's likely path before it breaks, so the response is ready</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Works with</div><div class="w-chips"><span class="w-chip"><b>6</b>Scenario &amp; Red Team</span><span class="w-chip"><b>8</b>Living Narrative</span></div></div><div class="pc-open"><b>Open the conversation</b>What policy development became a comms fire drill that earlier warning would have prevented?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-5"><div class="pkg-card"><div class="pc-num">Package 5 · Foundation</div><div class="pc-title">Reporter &amp; Stakeholder Intelligence</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A current, working profile on any reporter, analyst, activist, or partner who matters. Far faster than primary research, and far deeper than going in cold.</div></div><div class="pc-badges"><span class="badge"><span class="rank">5</span>Media Relations</span><span class="badge"><span class="rank">1</span>Earnings Cycle</span><span class="badge"><span class="rank">2</span>Executive Comms</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Beat mapping, stakeholder mapping, analyst tracking. Valuable when fresh, and usually stale by the time it is needed.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Stand up a working profile on any reporter, analyst, or critic in far less time than primary research takes</li><li>Keep stakeholder maps live instead of rebuilding them every planning cycle</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Know how a specific journalist tends to frame Nike before you pitch, drawn from everything they have written</li><li>Catch a shift in an analyst's or activist's posture early, while there is still time to act</li><li>See which audiences and stakeholders Nike understands least</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Feeds</div><div class="w-chips"><span class="w-chip"><b>6</b>Scenario &amp; Red Team</span><span class="w-chip"><b>7</b>Exec &amp; Earnings Sim</span><span class="w-chip"><b>9</b>Campaign &amp; Agency</span></div></div><div class="pc-open"><b>Open the conversation</b>When a journalist, analyst, or critic surprised you, what did the team not know about them?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-6"><div class="pkg-card"><div class="pc-num">Package 6 · Simulation Engine</div><div class="pc-title">Scenario Planning &amp; Red Teaming</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A fast read on how a plan will be received and where it breaks, before Nike commits to it.</div></div><div class="pc-badges"><span class="badge"><span class="rank">4</span>World Cup</span><span class="badge"><span class="rank">5</span>Media Relations</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Scenario planning for known moments, pre-mortems, crisis tabletops, go/no-go calls, and reputational risk reads on contested moves.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Run a plan against likely reactions and adversarial readings in an hour, not a week of meetings</li><li>Pressure-test without having to assemble the most senior people in the room</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Red-team every significant plan, not only the few that reach a senior calendar</li><li>See the strongest counter-moves and second-order effects before committing</li><li>Rehearse a decision cheaply and repeatedly until the plan holds</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Draws on</div><div class="w-chips"><span class="w-chip"><b>1</b>Institutional Memory</span><span class="w-chip"><b>5</b>Reporter &amp; Stakeholder</span></div></div><div class="pc-open"><b>Open the conversation</b>If a plan could be stress-tested in an hour instead of a week, what would you do differently?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-7"><div class="pkg-card"><div class="pc-num">Package 7 · Simulation Engine</div><div class="pc-title">Executive Comms &amp; Earnings Simulation</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A sim that puts an executive or an earnings script through the interrogation before it goes live — so the hard questions land in rehearsal, not on the record.</div></div><div class="pc-badges"><span class="badge"><span class="rank">1</span>Earnings Cycle</span><span class="badge"><span class="rank">2</span>Executive Comms</span><span class="badge"><span class="rank">5</span>Media Relations</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Earnings Q&amp;A drafting and murder boards. Executive rehearsal and briefing books. Media training, interview prep, and rapid response under deadline.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Draft the earnings Q&amp;A bank against likely analyst questions in a fraction of the prep time</li><li>Run an executive through a sim of tough questioning on demand, not only when the room is booked</li><li>Build a briefing book for any moment from the institutional record, fast</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Simulate how the specific reporters and analysts who cover Nike will actually press, before the call</li><li>Hold the message consistent through the full follow-up coverage cycle, not just the call itself</li><li>Give every executive rehearsal-grade prep, not only the CEO before the biggest moments</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Draws on</div><div class="w-chips"><span class="w-chip"><b>1</b>Institutional Memory</span><span class="w-chip"><b>5</b>Reporter &amp; Stakeholder</span></div></div><div class="pc-open"><b>Open the conversation</b>Last earnings cycle: where did prep eat the most time, and where did a question land that the script did not cover?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-8"><div class="pkg-card"><div class="pc-num">Package 8 · Simulation Engine</div><div class="pc-title">Living Narrative Pressure Testing</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">A test of the corporate narrative against how the company and the world have changed, run any time you need it.</div></div><div class="pc-badges"><span class="badge"><span class="rank">1</span>Earnings Cycle</span><span class="badge"><span class="rank">3</span>Narrative Control</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Narrative consistency checks across channels and regions, message testing before launch, and position papers on contested topics.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Check whether the quarter's earnings story reinforces or quietly contradicts the corporate narrative</li><li>Test the narrative against real events whenever you need to, not once a year when someone schedules it</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>A narrative you can test on demand, monthly, or quarterly — so it stays credible as the world changes</li><li>Catch where the narrative rings hollow before an audience tells you it does</li><li>Trace narrative drift across regions and pull it back into line</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Draws on</div><div class="w-chips"><span class="w-chip"><b>1</b>Institutional Memory</span><span class="w-chip"><b>2</b>Cultural &amp; Trend</span><span class="w-chip"><b>3</b>Competitive Coverage</span><span class="w-chip"><b>4</b>Policy &amp; Regulatory</span></div></div><div class="pc-open"><b>Open the conversation</b>Did the last earnings story reinforce the corporate narrative, or quietly contradict it?</div></div></div></div>
+        <div class="pkg-panel" id="pkg-9"><div class="pkg-card"><div class="pc-num">Package 9 · Activation Endpoint</div><div class="pc-title">Campaign Ideation &amp; Agency Mobilization</div><div class="pc-getstrip"><div class="gs-label">What you get</div><div class="gs-text">Idea to a sharp, stress-tested agency brief in hours, with the cultural and audience grounding built in.</div></div><div class="pc-point"><b>Why it's last</b><span>Package 9 sits <strong>downstream of every other package</strong>. It is the point where all the intelligence — memory, sensing, simulation — becomes action.</span></div><div class="pc-badges"><span class="badge"><span class="rank">4</span>World Cup</span><span class="badge"><span class="rank">6</span>Content Creation</span><span class="badge"><span class="rank">7</span>Campaign Ideation</span></div><div class="pc-today"><div class="today-label">In your world today</div><div class="today-text">Campaign concepts and platforms, agency briefs and creative direction, owned-channel content, and the briefing process that sets all of it in motion.</div></div><div class="pc-tracks"><div class="track sharpen"><span class="track-label"><span class="track-glyph">&rsaquo;</span> Sharpen what you do today</span><ul><li>Go from idea to a sharp agency brief in hours, with the grounding built in</li><li>Cut the rework cycle by giving agencies and content teams clearer direction the first time</li></ul></div><div class="track new"><span class="track-label"><span class="track-glyph">+</span> Do what wasn't possible before</span><ul><li>Stress-test a campaign idea against the world before briefing it — weak ideas die cheap</li><li>Generate more on-target content options at the volume the channels actually demand</li><li>Move from a sensed cultural moment to a brief fast enough to act while it is live</li></ul></div></div><div class="pc-footer"><div class="pc-works"><div class="w-label">Draws on</div><div class="w-chips"><span class="w-chip"><b>2</b>Cultural &amp; Trend</span><span class="w-chip"><b>5</b>Reporter &amp; Stakeholder</span><span class="w-chip"><b>6</b>Scenario &amp; Red Team</span></div></div><div class="pc-open"><b>Open the conversation</b>What would your agencies and content teams say is missing from the direction they receive?</div></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section style="padding:8px 0 56px;">
+  <div class="wrap">
+    <div class="engine plus-grid-violet">
+      <div class="eyebrow" style="color:var(--color-orange);margin-bottom:10px;">Build order · Internal</div>
+      <h3>How the nine packages overlap, and what that means for sequencing.</h3>
+      <p>What shares a build, what depends on what, and where the overlaps sit. Drives sequence, phasing, and how to price a bundle against a single package.</p>
+      <div class="pn-reads">
+        <div class="pn-read"><div class="pr-tag">Shared feeds</div><div class="pr-name">1 · Institutional Memory<br>5 · Reporter &amp; Stakeholder</div><div class="pr-desc">The inputs almost everything draws on. Strong build-first candidates — the action packages are only as good as these two feeds.</div></div>
+        <div class="pn-read"><div class="pr-tag">One build, three products</div><div class="pr-name">6 · Scenario<br>7 · Exec &amp; Earnings Sim<br>8 · Living Narrative</div><div class="pr-desc">Three expressions of one adversarial-simulation engine run against Nike's own material. Sell separately, build once.</div></div>
+        <div class="pn-read"><div class="pr-tag">Sensing cluster</div><div class="pr-name">2 · Cultural<br>3 · Competitive<br>4 · Policy</div><div class="pr-desc">Same shape: ingest, synthesize, deliver an insight read. A shared synthesis layer serves all three, and all three feed the Living Narrative test.</div></div>
+        <div class="pn-read"><div class="pr-tag">Activation endpoint</div><div class="pr-name">9 · Campaign &amp; Agency Mobilization</div><div class="pr-desc">Sits downstream of the feeds, sensing, and simulation. Highest dependency count, lands last but demos the whole suite working together.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="dark-section plus-grid-violet">
+  <div class="wrap">
+    <div class="eyebrow">Layer 2 · The Intelligent Operating System</div>
+    <h2>Intelligence without a decision loop is just a bigger pile to read.</h2>
+    <p class="ds-sub">The IOS is the operating layer that sits above the nine packages. It takes what the intelligence surfaces and routes it into four recursive loops — so every insight lands in a decision, not just a deck.</p>
+    <div class="quote-bar"><p>"The founders who get this right will run companies that improve while they sleep."</p><cite>Tom Blomfield, General Partner — Y Combinator</cite></div>
+    <div class="ios-principles">
+      <div class="ios-card"><div class="ic-bar"></div><h4>Humans Decide, AI Informs</h4><p>AI surfaces information, flags risks, and suggests actions. Final judgment on messaging, relationships, and strategy always belongs to the communications team.</p></div>
+      <div class="ios-card"><div class="ic-bar"></div><h4>Recursive Self-Improvement</h4><p>Each operating loop generates data, analyzes it, implements improvements, and gets smarter next cycle. The function compounds over time.</p></div>
+      <div class="ios-card"><div class="ic-bar"></div><h4>Context Is the Asset</h4><p>Make everything legible to AI. Structured outputs compound. Tribal knowledge disappears when people do — unless it's captured and fed back into the system.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">The Four Decision Loops · Nike Edition</div>
+      <h2>The IOS turns intelligence into a rhythm — not a one-time read.</h2>
+      <p>Four recursive loops that use what the packages surface to run better meetings, faster decisions, and a comms function that improves each cycle.</p>
+    </div>
+    <div class="loops-grid">
+      <div class="loop-card lc-indigo"><div class="lc-num">01</div><div class="lc-pkgs">Packages 1 · 2 · 8</div><h3>Narrative Intelligence Loop</h3><p>Living narrative health score, cultural moment tracking, messaging drift detection. Every leader enters every comms meeting already fully briefed on where the story stands.</p></div>
+      <div class="loop-card lc-zaffre"><div class="lc-num">02</div><div class="lc-pkgs">Packages 3 · 5</div><h3>Stakeholder Intelligence Loop</h3><p>Reporter profiles, analyst coverage patterns, activist posture shifts. No team member goes into a media interaction cold again. Stakeholder maps stay live, not rebuilt every cycle.</p></div>
+      <div class="loop-card lc-purple"><div class="lc-num">03</div><div class="lc-pkgs">Packages 4 · 6</div><h3>Risk &amp; Response Loop</h3><p>Policy watch, scenario planning, red team results. Risks surface proactively — not as fire drills. Responses are ready before the question is asked.</p></div>
+      <div class="loop-card lc-orange"><div class="lc-num">04</div><div class="lc-pkgs">Packages 7 · 9</div><h3>Execution Loop</h3><p>Earnings cycle prep, executive simulation, campaign briefing. The team executes with more prep time and sharper material — every cycle, without the manual heroics.</p></div>
+    </div>
+  </div>
+</section>
+<section class="dark-section plus-grid-violet">
+  <div class="wrap">
+    <div class="eyebrow">The Meeting System Rebuilt</div>
+    <h2>Meetings start at decisions.<br>AI handles the pre-brief.</h2>
+    <p class="ds-sub">Every recurring meeting gets an AI-generated pre-brief. All attendees arrive informed. The room is used entirely for decisions — not status.</p>
+    <div class="meeting-grid">
+      <div class="meeting-card mc-before"><div class="mc-phase">Before</div><h4>AI generates the pre-brief</h4><ul><li>Status on narrative health, outstanding decisions, competitive moves</li><li>All attendees arrive informed — no time lost on status catch-up</li><li>Meeting begins at decisions, not background</li></ul></div>
+      <div class="meeting-card mc-during"><div class="mc-phase">During</div><h4>Focused on decisions only</h4><ul><li>Structured real-time capture of decisions and owners</li><li>No "where are we?" — AI handled that before you walked in</li><li>Action items assigned with owners immediately</li></ul></div>
+      <div class="meeting-card mc-after"><div class="mc-phase">After</div><h4>AI synthesizes and routes</h4><ul><li>Decisions and action items fed into the relevant intelligence loops</li><li>Next pre-brief automatically informed by this session</li><li>The loop improves with every cycle</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">From Intelligence to Decisions</div>
+      <h2>Six principles for an AI-informed communications function.</h2>
+    </div>
+    <div class="principles-grid">
+      <div class="principle-card"><div class="prc-num">01</div><h4>Humans decide, AI informs</h4><p>AI surfaces and suggests. Final judgment on messaging, relationships, and strategy belongs to the comms team.</p></div>
+      <div class="principle-card"><div class="prc-num">02</div><h4>Context compounds</h4><p>Structured outputs make every next cycle smarter. The discipline of building recursive loops compounds over time.</p></div>
+      <div class="principle-card"><div class="prc-num">03</div><h4>Meetings are for decisions</h4><p>If a meeting exists to share information that could be a pre-brief, it's unnecessary. AI handles the brief.</p></div>
+      <div class="principle-card"><div class="prc-num">04</div><h4>Relationships are human</h4><p>Client trust, journalist relationships, and team culture are human achievements AI enhances but cannot replace.</p></div>
+      <div class="principle-card"><div class="prc-num">05</div><h4>Improve each loop, each cycle</h4><p>Consistent measurable improvement — not perfection in year one. The system self-corrects as it runs.</p></div>
+      <div class="principle-card"><div class="prc-num">06</div><h4>Burn cycles, not headcount</h4><p>Before hiring to fix an information problem, ask whether a smarter loop can solve it instead.</p></div>
+    </div>
+  </div>
+</section>
+<section class="section" style="padding-top:0;">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">Implementation Roadmap</div>
+      <h2>12 months. Five phases. Each one delivers value independently.</h2>
+      <p>No waiting for full rollout. Each phase stands alone and feeds the next.</p>
+    </div>
+    <div class="roadmap-grid">
+      <div class="road-col"><div class="rc-bar" style="background:var(--color-zaffre);"></div><div class="rc-inner"><div class="rc-phase" style="color:var(--color-zaffre);">Phase 1</div><div class="rc-months">Months 1–2</div><div class="rc-title">Foundation</div><ul><li>Audit where institutional knowledge lives today</li><li>Select and implement AI toolstack</li><li>Build Package 1: Institutional Memory</li></ul></div></div>
+      <div class="road-col"><div class="rc-bar" style="background:var(--color-tropical-indigo);"></div><div class="rc-inner"><div class="rc-phase" style="color:var(--color-tropical-indigo);">Phase 2</div><div class="rc-months">Months 3–4</div><div class="rc-title">Sensing Live</div><ul><li>Deploy Cultural &amp; Trend Monitoring (Pkg 2)</li><li>Deploy Competitive Coverage (Pkg 3)</li><li>Policy &amp; Regulatory Watch (Pkg 4)</li></ul></div></div>
+      <div class="road-col"><div class="rc-bar" style="background:#6B21A8;"></div><div class="rc-inner"><div class="rc-phase" style="color:#6B21A8;">Phase 3</div><div class="rc-months">Months 5–6</div><div class="rc-title">Intel Activated</div><ul><li>Reporter &amp; Stakeholder Intel (Pkg 5)</li><li>First AI-generated meeting pre-briefs</li><li>Decision capture system live</li></ul></div></div>
+      <div class="road-col"><div class="rc-bar" style="background:var(--color-orange);"></div><div class="rc-inner"><div class="rc-phase" style="color:var(--color-orange);">Phase 4</div><div class="rc-months">Months 7–9</div><div class="rc-title">Simulation Engine</div><ul><li>Scenario &amp; Red Team live (Pkg 6)</li><li>Exec Comms &amp; Earnings Sim (Pkg 7)</li><li>Living Narrative Testing (Pkg 8)</li></ul></div></div>
+      <div class="road-col"><div class="rc-bar" style="background:#B91C1C;"></div><div class="rc-inner"><div class="rc-phase" style="color:#B91C1C;">Phase 5</div><div class="rc-months">Months 10–12</div><div class="rc-title">Full Activation</div><ul><li>Campaign Ideation &amp; Agency Brief (Pkg 9)</li><li>First AI-suggested comms improvements</li><li>Recursive loops running end to end</li></ul></div></div>
+    </div>
+  </div>
+</section>
+<section class="mechanic">
+  <div class="wrap">
+    <div class="eyebrow">The Workshop Mechanic</div>
+    <h2>Every package runs the same rhythm, so the session produces a comparable grid, not nine loose conversations.</h2>
+    <div class="mechanic-grid">
+      <div class="step"><div class="step-kicker">Step One</div><h4>Prioritize</h4><p>Walk Nike through all nine packages in brief, then ask which matter most. Start where they point — so the session spends its time on the areas they care about and does not run out of clock.</p></div>
+      <div class="step"><div class="step-kicker">Step Two</div><h4>Pressure Test</h4><p>For the packages Nike prioritizes, run the fixed question battery. The same five questions every time build rhythm and reveal which ones get hot.</p><ol><li><span class="li-k">1.</span> Where does this happen today, and who owns it?</li><li><span class="li-k">2.</span> Last time it went wrong or too slow, what did it cost?</li><li><span class="li-k">3.</span> What information would this need that you have? That you do not?</li><li><span class="li-k">4.</span> What decision gets faster or better if this works?</li><li><span class="li-k">5.</span> What would make you trust the output enough to act on it?</li></ol></div>
+      <div class="step"><div class="step-kicker">Step Three</div><h4>Reduce</h4><p>Capture answers into five requirement categories — identical for every package, so results compare cleanly across all nine.</p><ul><li><span class="li-k">Inputs</span> — data and access required</li><li><span class="li-k">Owners</span> — who runs it, who decides</li><li><span class="li-k">Cadence</span> — one-time, weekly, quarterly, always-on</li><li><span class="li-k">Integration</span> — where it meets existing workflow</li><li><span class="li-k">Proof</span> — what success looks like in 90 days</li></ul></div>
+    </div>
+  </div>
+</section>
+<section class="cta-section">
+  <div class="wrap">
+    <div class="cta-inner plus-grid-violet">
+      <div>
+        <div class="eyebrow" style="color:var(--color-orange);margin-bottom:12px;">The Self-Improving Comms Function</div>
+        <h2>A communications function with this orientation will outperform a team twice its size without it.</h2>
+        <p>Not because the AI tools are magic — but because the discipline of building recursive intelligence loops compounds over time in ways that traditional comms structures simply cannot match.</p>
+        <div class="cta-next"><p>Next: Walk through the nine packages with the Nike team. Prioritize. Run the workshop.</p></div>
+      </div>
+      <div class="cta-stats">
+        <div class="cta-stat"><div class="cs-num">9</div><div class="cs-label">Intelligence Packages</div></div>
+        <div class="cta-stat"><div class="cs-num">4</div><div class="cs-label">Decision Loops</div></div>
+        <div class="cta-stat"><div class="cs-num">12</div><div class="cs-label">Month Roadmap</div></div>
+        <div class="cta-stat"><div class="cs-num">0</div><div class="cs-label">Manual Reports</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="animated-gradient-line" style="margin-top:56px;"></div>
+<footer class="site">
+  <div class="wrap">
+    <span>Andus Labs · Communications Intelligence System</span>
+    <span>Nike · Working Draft · June 2026</span>
+  </div>
+</footer>
+<script>
+var items=document.querySelectorAll('.pkg-item');
+var panels=document.querySelectorAll('.pkg-panel');
+items.forEach(function(item){
+  item.addEventListener('click',function(){
+    var target=item.getAttribute('data-target');
+    items.forEach(function(i){i.classList.remove('active');i.setAttribute('aria-selected','false');});
+    panels.forEach(function(p){p.classList.remove('active');});
+    item.classList.add('active');item.setAttribute('aria-selected','true');
+    document.getElementById(target).classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
