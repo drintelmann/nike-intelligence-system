@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="./image-slot.js"></script>
+  <style>
+    @font-face{font-family:'Syne';src:url('./fonts/Syne-VariableFont_wght.ttf') format('truetype-variations'),url('./fonts/Syne-VariableFont_wght.ttf') format('truetype');font-weight:400 800;font-style:normal;font-display:swap;}
+    @font-face{font-family:'Archivo';src:url('./fonts/Archivo-VariableFont_wdth,wght.ttf') format('truetype-variations'),url('./fonts/Archivo-VariableFont_wdth,wght.ttf') format('truetype');font-weight:100 900;font-stretch:62.5% 125%;font-style:normal;font-display:swap;}
+    html,body{margin:0;background:#1a064b;}
+    /* entrance primitives — base = visible end-state, animate from hidden, gated on active slide */
+    .rv{display:block;overflow:hidden;padding-bottom:.09em;}
+    .rv>*{display:block;transform:translateY(120%);transition:transform .9s cubic-bezier(.22,1,.36,1);}
+    [data-deck-active] .rv>*{transform:translateY(0);}
+    .fu{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,1,.36,1);}
+    [data-deck-active] .fu{opacity:1;transform:translateY(0);}
+    .fr{opacity:0;transform:translateX(-32px);transition:opacity .8s ease,transform .8s cubic-bezier(.22,1,.36,1);}
+    [data-deck-active] .fr{opacity:1;transform:translateX(0);}
+    .sc{opacity:0;transform:scale(.9);transition:opacity .9s ease,transform 1s cubic-bezier(.22,1,.36,1);}
+    [data-deck-active] .sc{opacity:1;transform:scale(1);}
+    /* ambient motion — only on the visible slide, only when motion is welcome */
+    @media(prefers-reduced-motion:no-preference){
+      [data-deck-active] .spin{animation:spin 90s linear infinite;}
+      [data-deck-active] .spinr{animation:spin 120s linear infinite reverse;}
+      [data-deck-active] .drift{animation:drift 26s linear infinite;}
+      [data-deck-active] .floaty{animation:floaty 8s ease-in-out infinite;}
+      [data-deck-active] .pulse{animation:pulse 4.5s cubic-bezier(.65,0,.35,1) infinite;}
+      [data-deck-active] .breathe{animation:breathe 9s ease-in-out infinite;}
+    }
+    @keyframes spin{to{transform:rotate(360deg);}}
+    @keyframes drift{to{background-position:80px 80px;}}
+    @keyframes floaty{0%,100%{transform:translateY(0);}50%{transform:translateY(-14px);}}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:.9;}50%{transform:scale(1.06);opacity:1;}}
+    @keyframes breathe{0%,100%{transform:scale(1);opacity:.85;}50%{transform:scale(1.04);opacity:1;}}
+    @media(prefers-reduced-motion:reduce){.rv>*,.fu,.fr,.sc{transform:none!important;opacity:1!important;transition:none!important;}}
+    /* nav */
+    .nv{font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;letter-spacing:.01em;background:transparent;border:none;border-radius:999px;padding:8px 17px;cursor:pointer;transition:color .22s,background .22s;}
+    .nv-d{color:rgba(250,245,234,.6);}
+    .nv-d:hover{color:#7884ff;}
+    .nv-d[data-on]{color:#1a064b;background:#7884ff;}
+    .nv-l{color:#8a7d74;}
+    .nv-l:hover{color:#1a064b;}
+    .nv-l[data-on]{color:#faf5ea;background:#1a064b;}
+  </style>
+</helmet>
+<x-import component-from-global-scope="deck-stage" from="./deck-stage.js" width="1920" height="1080" hint-size="100%,100%">
+
+  <!-- 01 COVER (dark) -->
+  <section data-label="Title" data-speaker-notes="The thesis in one line: nine intelligence packages plus an operating system that turns them into faster, better decisions.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.14' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <img src="./assets/asterisk-2.svg" aria-hidden="true" class="spin breathe" style="position:absolute;right:-220px;top:50%;width:880px;transform:translateY(-50%);opacity:.13;filter:invert(78%) sepia(40%) saturate(900%) hue-rotate(200deg);pointer-events:none;transform-origin:center;">
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" data-on onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:0 150px 0 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#ff4f01;margin-bottom:30px;">The Communications Big Bang · Nike</div>
+        <h1 style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.035em;line-height:1.0;font-size:104px;margin:0;max-width:1340px;">
+          <span class="rv"><span style="transition-delay:.05s;">Nine packages.</span></span>
+          <span class="rv"><span style="transition-delay:.18s;">One operating system.</span></span>
+          <span class="rv"><span style="transition-delay:.31s;color:#7884ff;">Decisions that don&rsquo;t wait.</span></span>
+        </h1>
+        <p class="fu" style="transition-delay:.6s;font-size:24px;line-height:1.45;color:#d9dbff;max-width:860px;margin:40px 0 0;text-wrap:pretty;">A two-layer system — intelligence that gathers, and a loop that turns it into better decisions. So every call is made with more context and less prep, and the function gets smarter each cycle.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 THESIS QUOTE (dark) + image -->
+  <section data-label="Thesis" data-speaker-notes="Frame the stakes. This is the transition that defines the era for comms leaders.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <img src="./assets/asterisk-2.svg" aria-hidden="true" class="spinr" style="position:absolute;left:-200px;bottom:-220px;width:620px;opacity:.10;filter:invert(78%) sepia(40%) saturate(900%) hue-rotate(200deg);pointer-events:none;transform-origin:center;">
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" data-on onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:128px 120px 80px 120px;display:grid;grid-template-columns:1.35fr 0.65fr;gap:64px;align-items:center;">
+        <div>
+          <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#7884ff;margin-bottom:34px;">The premise</div>
+          <blockquote style="margin:0;font-family:'Syne',sans-serif;font-weight:700;letter-spacing:-.025em;line-height:1.08;font-size:62px;">
+            <span class="rv"><span style="transition-delay:.05s;">&ldquo;AI is the most</span></span>
+            <span class="rv"><span style="transition-delay:.16s;">important, consequential</span></span>
+            <span class="rv"><span style="transition-delay:.27s;">transition we&rsquo;ll undertake</span></span>
+            <span class="rv"><span style="transition-delay:.38s;">as <span style="color:#ff4f01;">comms leaders</span>.&rdquo;</span></span>
+          </blockquote>
+          <p class="fu" style="transition-delay:.7s;font-size:21px;color:#d9dbff;margin:40px 0 0;max-width:760px;line-height:1.5;">Nike&rsquo;s communications function runs on talent and hustle. This system gives it memory, sensing, and a feedback loop.</p>
+        </div>
+        <div class="sc" style="transition-delay:.4s;position:relative;">
+          <div style="position:absolute;inset:-14px -14px auto auto;width:64px;height:64px;z-index:2;">
+            <img src="./assets/asterisk-1.svg" class="spin" style="width:100%;height:100%;filter:invert(53%) sepia(89%) saturate(3200%) hue-rotate(355deg);transform-origin:center;" aria-hidden="true">
+          </div>
+          <image-slot id="thesis-portrait" style="width:100%;height:520px;display:block;" shape="rounded" radius="16" placeholder="Drop a warm, documentary portrait — a comms leader at work"></image-slot>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 CHALLENGE (dark) -->
+  <section data-label="Challenge" data-speaker-notes="The team doesn't lack skill. The system underneath lacks memory, sensing and a feedback loop.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:128px 120px 84px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:26px;">The Challenge</div>
+        <h2 style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.04;font-size:60px;margin:0;max-width:1320px;">
+          <span class="rv"><span style="transition-delay:.05s;">Nike&rsquo;s comms runs on talent and hustle.</span></span>
+          <span class="rv"><span style="transition-delay:.18s;color:#7884ff;">The system underneath works against it.</span></span>
+        </h2>
+        <div class="fu" style="transition-delay:.5s;display:flex;align-items:stretch;margin-top:52px;border:1px solid rgba(250,245,234,.16);border-radius:10px;overflow:hidden;background:rgba(220,214,247,.04);">
+          <div style="flex:1;padding:26px 30px;"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#aa988f;margin-bottom:14px;">Where most teams are</div><div style="display:flex;flex-direction:column;gap:9px;font-size:17px;color:#d9dbff;"><span>Adoption up, no org change</span><span>A few advanced players</span><span>Individual, not team, oriented</span></div></div>
+          <div style="display:flex;align-items:center;padding:0 18px;"><img src="./assets/arrows.svg" class="floaty" style="width:46px;filter:invert(53%) sepia(89%) saturate(3200%) hue-rotate(355deg);" aria-hidden="true"></div>
+          <div style="flex:1;padding:26px 30px;background:rgba(120,132,255,.08);"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#7884ff;margin-bottom:14px;">Building toward</div><div style="display:flex;flex-direction:column;gap:9px;font-size:17px;color:#d9dbff;"><span>Strategy-led</span><span>Workflow-centric</span><span>Infrastructure supported</span></div></div>
+          <div style="display:flex;align-items:center;padding:0 18px;"><img src="./assets/arrows.svg" class="floaty" style="width:46px;filter:invert(53%) sepia(89%) saturate(3200%) hue-rotate(355deg);animation-delay:.6s;" aria-hidden="true"></div>
+          <div style="flex:1;padding:26px 30px;background:rgba(120,132,255,.16);"><div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#aab2ff;margin-bottom:14px;">The goal</div><div style="display:flex;flex-direction:column;gap:9px;font-size:17px;color:#faf5ea;font-weight:500;"><span>Intelligence informs every decision</span><span>Impact scales without headcount</span><span>Machine-readable by default</span></div></div>
+        </div>
+        <p class="fu" style="transition-delay:.7s;font-style:italic;color:#aa988f;font-size:18px;margin:26px 0 0;text-align:center;">The team doesn&rsquo;t lack skill. The system lacks memory, sensing, and a feedback loop.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 WHERE IT BREAKS (dark) -->
+  <section data-label="Where it breaks" data-speaker-notes="Four structural gaps: memory in people, late intel, manual prep, untested plans.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:128px 120px 84px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:26px;">Where it breaks</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.02;font-size:56px;margin:0 0 48px;"><span style="transition-delay:.05s;">Four gaps the function lives with today.</span></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+          <div class="fu" style="transition-delay:.3s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-left:4px solid #ff4f01;border-radius:8px;padding:26px 30px;"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;margin-bottom:10px;">Memory lives in people</div><div style="font-size:17px;color:#d9dbff;line-height:1.5;">Approved language, past positions, coverage archives — spread across drives, email, agency decks, and the one person who happens to remember.</div></div>
+          <div class="fu" style="transition-delay:.42s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-left:4px solid #ff4f01;border-radius:8px;padding:26px 30px;"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;margin-bottom:10px;">Intel arrives too late</div><div style="font-size:17px;color:#d9dbff;line-height:1.5;">Competitive shifts, cultural moments, policy signals — discovered after the window to respond has already closed.</div></div>
+          <div class="fu" style="transition-delay:.54s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-left:4px solid #ff4f01;border-radius:8px;padding:26px 30px;"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;margin-bottom:10px;">Prep is manual heroics</div><div style="font-size:17px;color:#d9dbff;line-height:1.5;">Earnings Q&amp;A, exec briefing books, stakeholder profiles — built by hand before every major moment, then discarded after.</div></div>
+          <div class="fu" style="transition-delay:.66s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-left:4px solid #ff4f01;border-radius:8px;padding:26px 30px;"><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:24px;margin-bottom:10px;">Plans aren&rsquo;t stress-tested</div><div style="font-size:17px;color:#d9dbff;line-height:1.5;">The senior calendar holds only a few pre-mortems. Most plans ship without an adversarial read on how they&rsquo;ll land.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 MATURITY LADDER (light accent) -->
+  <section data-label="Maturity ladder" data-speaker-notes="The five-level pattern across clients. Most are stuck at Heroes — usage driven by individuals, not systems. The goal is Native.">
+    <div style="position:absolute;inset:0;background:#faf5ea;color:#1a064b;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%231a064b' stroke-opacity='0.08' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-pos-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(26,6,75,.04);border:1px solid rgba(26,6,75,.12);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-l" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-l" data-on onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-l" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-l" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-l" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:120px 90px 64px 90px;display:flex;flex-direction:column;">
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1;font-size:60px;margin:0 0 28px;"><span style="transition-delay:.05s;">Client patterns. And where things get stuck.</span></h2>
+        <div style="display:flex;border:1px solid rgba(26,6,75,.14);border-radius:8px;overflow:hidden;">
+          <div class="fu" style="transition-delay:.3s;flex:1;padding:26px 24px 30px;background:#e9e6fb;color:#1a064b;">
+            <svg viewBox="0 0 80 80" style="width:54px;height:54px;margin-bottom:22px;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="6"/><path d="M40 8v14M40 58v14M8 40h14M58 40h14M18 18l9 9M62 18l-9 9M18 62l9-9M62 62l-9-9" opacity=".7"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;font-weight:500;color:rgba(26,6,75,.55);margin-bottom:8px;">LEVEL 01</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:27px;margin-bottom:12px;">Access</div>
+            <div style="font-size:15px;line-height:1.45;color:rgba(26,6,75,.7);">AI deployed. Committed users are the exception.</div>
+          </div>
+          <div class="fu" style="transition-delay:.4s;flex:1;padding:26px 24px 30px;background:#c9caf5;color:#1a064b;">
+            <svg viewBox="0 0 80 80" style="width:54px;height:54px;margin-bottom:22px;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="9" fill="currentColor" stroke="none"/><path d="M40 6v16M40 58v16M6 40h16M58 40h16M16 16l11 11M64 16l-11 11M16 64l11-11M64 64l-11-11"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;font-weight:500;color:rgba(26,6,75,.55);margin-bottom:8px;">LEVEL 02</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:27px;margin-bottom:12px;">Heroes</div>
+            <div style="font-size:15px;line-height:1.45;color:rgba(26,6,75,.72);">Applied in isolated pockets. Usage driven by individuals rather than systems.</div>
+          </div>
+          <div class="fu" style="transition-delay:.5s;flex:1;padding:26px 24px 30px;background:#5b62cf;color:#faf5ea;">
+            <svg viewBox="0 0 80 80" style="width:54px;height:54px;margin-bottom:22px;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="26"/><circle cx="40" cy="40" r="4" fill="currentColor" stroke="none"/><circle cx="40" cy="14" r="4"/><circle cx="14" cy="40" r="4"/><circle cx="66" cy="40" r="4"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;font-weight:500;color:rgba(250,245,234,.6);margin-bottom:8px;">LEVEL 03</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:27px;margin-bottom:12px;">Operational</div>
+            <div style="font-size:15px;line-height:1.45;color:rgba(250,245,234,.82);">Human OS emerging. Systematic approach beginning.</div>
+          </div>
+          <div class="fu" style="transition-delay:.6s;flex:1;padding:26px 24px 30px;background:#2f2f9e;color:#faf5ea;">
+            <svg viewBox="0 0 80 80" style="width:54px;height:54px;margin-bottom:22px;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="26"/><ellipse cx="40" cy="40" rx="26" ry="11"/><circle cx="40" cy="40" r="3.5" fill="currentColor" stroke="none"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;font-weight:500;color:rgba(250,245,234,.6);margin-bottom:8px;">LEVEL 04</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:27px;margin-bottom:12px;">Integrated</div>
+            <div style="font-size:15px;line-height:1.45;color:rgba(250,245,234,.82);">Human OS functioning. Work moves faster and gets better.</div>
+          </div>
+          <div class="fu" style="transition-delay:.7s;flex:1;padding:26px 24px 30px;background:#1a064b;color:#faf5ea;">
+            <svg viewBox="0 0 80 80" style="width:54px;height:54px;margin-bottom:22px;" fill="none" stroke="currentColor" stroke-width="2"><circle cx="40" cy="40" r="5" fill="currentColor" stroke="none"/><circle cx="40" cy="16" r="4"/><circle cx="40" cy="64" r="4"/><circle cx="19" cy="28" r="4"/><circle cx="61" cy="28" r="4"/><circle cx="19" cy="52" r="4"/><circle cx="61" cy="52" r="4"/><path d="M40 21v14M40 59V45M23 30l13 8M57 30l-13 8M23 50l13-8M57 50l-13-8" opacity=".75"/></svg>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.16em;font-weight:500;color:rgba(250,245,234,.6);margin-bottom:8px;">LEVEL 05</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:27px;margin-bottom:12px;">Native</div>
+            <div style="font-size:15px;line-height:1.45;color:rgba(250,245,234,.82);">Human OS fully operational. AI-enabled ways of working are standard practice.</div>
+          </div>
+        </div>
+        <div class="fu" style="transition-delay:.85s;display:grid;grid-template-columns:repeat(5,1fr);gap:0;margin-top:32px;font-size:15px;color:rgba(26,6,75,.78);">
+          <ul style="margin:0;padding:0 20px 0 22px;list-style:none;display:flex;flex-direction:column;gap:7px;"><li>Adoption is up</li><li>No org change</li><li>Lack of clarity on why</li></ul>
+          <ul style="margin:0;padding:0 20px 0 22px;list-style:none;display:flex;flex-direction:column;gap:7px;"><li>A few advanced players</li><li>Personality-dependent</li><li>Individual vs team oriented</li></ul>
+          <ul style="margin:0;padding:0 20px 0 22px;list-style:none;display:flex;flex-direction:column;gap:7px;"><li>Strategy &amp; idea driven</li><li>Workflow-centric</li><li>Infrastructure supported</li></ul>
+          <ul style="margin:0;padding:0 20px 0 22px;list-style:none;display:flex;flex-direction:column;gap:7px;"><li>AI central to comms ops</li><li>Reaches people &amp; agents</li><li>Risks managed upstream</li></ul>
+          <ul style="margin:0;padding:0 20px 0 22px;list-style:none;display:flex;flex-direction:column;gap:7px;"><li>Intelligence informs decisions</li><li>Scales w/out headcount</li><li>Machine-readable by default</li></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 THE ANSWER (dark) -->
+  <section data-label="The answer" data-speaker-notes="Two layers: nine intelligence packages, and a decision operating system of four recursive loops.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <img src="./assets/asterisk-2.svg" aria-hidden="true" class="spin" style="position:absolute;right:-260px;top:48%;width:760px;transform:translateY(-50%);opacity:.08;filter:invert(78%) sepia(40%) saturate(900%) hue-rotate(200deg);pointer-events:none;transform-origin:center;">
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:128px 120px 84px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:26px;">The Answer</div>
+        <h2 style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.03;font-size:54px;margin:0 0 44px;max-width:1240px;">
+          <span class="rv"><span style="transition-delay:.05s;">Intelligence that gathers —</span></span>
+          <span class="rv"><span style="transition-delay:.17s;">and a loop that turns it into decisions.</span></span>
+        </h2>
+        <div class="fr" style="transition-delay:.4s;border:1.5px solid #7884ff;background:rgba(120,132,255,.1);border-radius:12px;padding:30px 36px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;font-weight:500;text-transform:uppercase;color:#aab2ff;margin-bottom:8px;">Layer 1 · Intelligence</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:32px;margin-bottom:8px;">Nine Packages</div>
+          <div style="font-size:17px;color:#d9dbff;line-height:1.5;">Institutional memory · Cultural sensing · Competitive coverage · Policy watch · Stakeholder intelligence · Scenario simulation · Executive prep · Narrative testing · Campaign activation</div>
+        </div>
+        <div class="fu" style="transition-delay:.52s;display:flex;justify-content:center;padding:14px 0;"><span class="pulse" style="width:14px;height:14px;border-radius:50%;background:#ff4f01;"></span></div>
+        <div class="fr" style="transition-delay:.62s;border:1.5px solid #ff4f01;background:rgba(255,79,1,.08);border-radius:12px;padding:30px 36px;">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;font-weight:500;text-transform:uppercase;color:#ff4f01;margin-bottom:8px;">Layer 2 · Decision Operating System</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:32px;margin-bottom:8px;">Intelligent Operating System</div>
+          <div style="font-size:17px;color:#d9dbff;line-height:1.5;">Four recursive loops that turn the intelligence into better meetings, faster decisions, and a function that improves each cycle.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 TYPE A vs G (dark) -->
+  <section data-label="Type A vs G" data-speaker-notes="Type A extracts from tools and erodes. Type G orchestrates human + AI and compounds. The CIS makes Type G possible at Nike scale.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:122px 120px 76px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#7884ff;margin-bottom:22px;">The Leadership Mode Question</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.02;font-size:54px;margin:0 0 14px;"><span style="transition-delay:.05s;">Is your leadership mode fit for purpose?</span></h2>
+        <p class="fu" style="transition-delay:.3s;font-size:19px;color:#d9dbff;max-width:1080px;margin:0 0 38px;line-height:1.5;">AI doesn&rsquo;t change the work — it changes what the work requires of the person leading it. Type A strategies extract from tools. Type G strategies build systems that compound.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+          <div class="fr" style="transition-delay:.42s;border:1px solid rgba(220,214,247,.22);background:rgba(220,214,247,.04);border-radius:10px;padding:28px 32px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#aab2ff;margin-bottom:18px;">Type A · Legacy</div>
+            <div style="display:flex;gap:16px;margin-bottom:12px;"><span style="min-width:90px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(220,214,247,.55);padding-top:2px;">Mindset</span><span style="font-size:17px;color:#d9dbff;">Find the answer. Deductive, linear. Fear the hallucination.</span></div>
+            <div style="display:flex;gap:16px;"><span style="min-width:90px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(220,214,247,.55);padding-top:2px;">Outcome</span><span style="font-size:17px;color:#d9dbff;">Tool-focused strategies. Assets erode, returns diminish.</span></div>
+          </div>
+          <div class="fr" style="transition-delay:.56s;border:1px solid rgba(255,79,1,.3);background:rgba(255,79,1,.06);border-radius:10px;padding:28px 32px;">
+            <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:#ff4f01;margin-bottom:18px;">Type G · Generative</div>
+            <div style="display:flex;gap:16px;margin-bottom:12px;"><span style="min-width:90px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,79,1,.7);padding-top:2px;">Mindset</span><span style="font-size:17px;color:#faf5ea;">Explore optimal iteration. Exploratory, networked. Mine the divergence.</span></div>
+            <div style="display:flex;gap:16px;"><span style="min-width:90px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,79,1,.7);padding-top:2px;">Outcome</span><span style="font-size:17px;color:#faf5ea;">Human + AI orchestration. Assets deepen, returns accelerate.</span></div>
+          </div>
+        </div>
+        <div class="fu" style="transition-delay:.74s;margin-top:24px;padding:18px 26px;background:rgba(255,79,1,.12);border:1px solid rgba(255,79,1,.3);border-radius:8px;text-align:center;font-size:19px;font-weight:600;color:#faf5ea;">The CIS is the infrastructure that makes Type G strategy possible at Nike scale.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 08 TWO WAYS AI PAYS (dark) -->
+  <section data-label="Two ways AI pays" data-speaker-notes="Every package reads the same way: sharpen what Nike already does, and do what was not possible before.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:128px 120px 84px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:26px;">How every package reads</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.03;font-size:54px;margin:0 0 46px;max-width:1180px;"><span style="transition-delay:.05s;">AI delivers value in two distinct ways.</span></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <div class="fr" style="transition-delay:.3s;background:rgba(120,132,255,.1);border:1px solid rgba(120,132,255,.34);border-radius:10px;padding:34px 38px;">
+            <div style="display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#aab2ff;margin-bottom:16px;"><span style="width:26px;height:26px;border-radius:6px;background:#7884ff;color:#1a064b;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">&rsaquo;</span> Sharpen what Nike does today</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:26px;margin-bottom:12px;line-height:1.15;">Less time, less heroic effort, more consistency</div>
+            <div style="font-size:17px;color:#d9dbff;line-height:1.55;">The work never stops — monitoring, prep, briefs, statements, the earnings cycle. AI takes the grind and the bottlenecks out of it, so the team moves faster and the output holds together.</div>
+          </div>
+          <div class="fr" style="transition-delay:.45s;background:rgba(255,79,1,.08);border:1px solid rgba(255,79,1,.3);border-radius:10px;padding:34px 38px;">
+            <div style="display:inline-flex;align-items:center;gap:12px;font-family:'JetBrains Mono',monospace;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#ff4f01;margin-bottom:16px;"><span style="width:26px;height:26px;border-radius:6px;background:#ff4f01;color:#1a064b;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">+</span> Do what wasn&rsquo;t possible before</div>
+            <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:26px;margin-bottom:12px;line-height:1.15;">Insight and reach beyond what hands can do</div>
+            <div style="font-size:17px;color:#d9dbff;line-height:1.55;">Some things the team cannot do today — not for lack of skill, but because no person can read that much, rehearse that often, or react that fast.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 WHAT IF (dark inverted) -->
+  <section data-label="What if…" data-speaker-notes="The provocations that open the package conversation. Read a few aloud — let them land.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:104px 120px 60px 120px;display:grid;grid-template-columns:0.82fr 1.18fr;gap:50px;align-items:stretch;">
+        <div style="position:relative;display:flex;flex-direction:column;justify-content:center;border-right:1px solid rgba(250,245,234,.16);padding-right:40px;">
+          <div aria-hidden="true" style="font-family:'Syne',sans-serif;font-weight:800;font-size:92px;line-height:.92;letter-spacing:-.04em;color:#7884ff;">
+            <span class="rv"><span style="transition-delay:.02s;">what if</span></span>
+            <span class="rv"><span style="transition-delay:.08s;opacity:.7;">what if</span></span>
+            <span class="rv"><span style="transition-delay:.14s;opacity:.5;">what if</span></span>
+            <span class="rv"><span style="transition-delay:.2s;opacity:.32;">what if</span></span>
+            <span class="rv"><span style="transition-delay:.26s;opacity:.18;">what if</span></span>
+          </div>
+          <div class="sc" style="transition-delay:.5s;align-self:flex-start;margin-top:26px;background:#ff4f01;color:#1a064b;font-family:'Syne',sans-serif;font-weight:800;font-size:30px;letter-spacing:.02em;padding:16px 38px;border-radius:999px;">WHAT IF…</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;grid-auto-rows:1fr;gap:16px;">
+          <div class="fu" style="transition-delay:.34s;background:rgba(220,214,247,.06);border:1px solid rgba(250,245,234,.16);border-radius:8px;padding:26px 28px;display:flex;align-items:flex-start;gap:14px;"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#ff4f01;font-size:22px;line-height:1;">＊</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:23px;line-height:1.2;color:#faf5ea;">you could predict pitches that land months before the call?</span></div>
+          <div class="fu" style="transition-delay:.44s;background:#5b62cf;border:1px solid #5b62cf;border-radius:8px;padding:26px 28px;display:flex;align-items:flex-start;gap:14px;"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#ff4f01;font-size:22px;line-height:1;">＊</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:23px;line-height:1.2;color:#faf5ea;">your plans were informed by real people over made-up personas?</span></div>
+          <div class="fu" style="transition-delay:.54s;background:#d9dbff;border-radius:8px;padding:26px 28px;display:flex;align-items:flex-start;gap:14px;"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#ff4f01;font-size:22px;line-height:1;">＊</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:23px;line-height:1.2;color:#1a064b;">you could see ideas in your mind in a matter of seconds?</span></div>
+          <div class="fu" style="transition-delay:.64s;background:rgba(220,214,247,.06);border:1px solid rgba(250,245,234,.16);border-radius:8px;padding:26px 28px;display:flex;align-items:flex-start;gap:14px;"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#ff4f01;font-size:22px;line-height:1;">＊</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:23px;line-height:1.2;color:#faf5ea;">you spotted issues before they became crises?</span></div>
+          <div class="fu" style="transition-delay:.74s;grid-column:1 / -1;background:#ff4f01;border-radius:8px;padding:26px 30px;display:flex;align-items:center;gap:16px;"><span style="font-family:'Syne',sans-serif;font-weight:800;color:#1a064b;font-size:24px;line-height:1;">＊</span><span style="font-family:'Syne',sans-serif;font-weight:700;font-size:25px;line-height:1.2;color:#1a064b;">you could help machines deliver factual information about Nike?</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 10 NINE PACKAGES (light accent) -->
+  <section data-label="Nine packages" data-speaker-notes="Layer 1. Two foundations, a sensing cluster, a simulation engine, and an activation endpoint.">
+    <div style="position:absolute;inset:0;background:#faf5ea;color:#1a064b;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%231a064b' stroke-opacity='0.07' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-pos-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(26,6,75,.04);border:1px solid rgba(26,6,75,.12);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-l" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-l" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-l" data-on onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-l" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-l" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:116px 90px 56px 90px;display:flex;flex-direction:column;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:16px;">Layer 1 · Intelligence</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1;font-size:56px;margin:0 0 34px;"><span style="transition-delay:.05s;">The nine packages.</span></h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div class="fu" style="transition-delay:.24s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #0c1d98;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#0c1d98;">01</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Foundation</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Institutional Memory</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">Ask anything Nike has ever said, get a sourced answer.</div></div>
+          <div class="fu" style="transition-delay:.3s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #7884ff;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#7884ff;">02</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Sensing</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Cultural &amp; Trend Monitoring</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">What is moving in culture, and where Nike can credibly join.</div></div>
+          <div class="fu" style="transition-delay:.36s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #7884ff;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#7884ff;">03</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Sensing</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Competitive Coverage</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">How competitors are covered and what moves they&rsquo;re making.</div></div>
+          <div class="fu" style="transition-delay:.42s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #7884ff;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#7884ff;">04</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Sensing</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Policy &amp; Regulatory Watch</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">Early warning on currents that arrive as comms problems.</div></div>
+          <div class="fu" style="transition-delay:.48s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #0c1d98;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#0c1d98;">05</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Foundation</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Reporter &amp; Stakeholder Intel</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">A current profile on anyone who matters, fast.</div></div>
+          <div class="fu" style="transition-delay:.54s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #ff4f01;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#ff4f01;">06</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Simulation</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Scenario &amp; Red Teaming</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">How a plan will land and where it breaks, before you commit.</div></div>
+          <div class="fu" style="transition-delay:.6s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #ff4f01;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#ff4f01;">07</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Simulation</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Exec &amp; Earnings Simulation</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">Rehearse the earnings call and the tough interview, before live.</div></div>
+          <div class="fu" style="transition-delay:.66s;background:#fff;border:1px solid rgba(26,6,75,.12);border-top:3px solid #ff4f01;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#ff4f01;">08</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aa988f;">Simulation</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Living Narrative Testing</div><div style="font-size:14px;color:rgba(26,6,75,.7);line-height:1.45;">A narrative you can pressure-test any time, not left on a shelf.</div></div>
+          <div class="fu" style="transition-delay:.72s;background:#1a064b;color:#faf5ea;border-top:3px solid #ff4f01;border-radius:8px;padding:22px 24px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:8px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#ff4f01;">09</span><span style="font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#aab2ff;">Activation</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:5px;">Campaign &amp; Agency Mobilization</div><div style="font-size:14px;color:rgba(250,245,234,.78);line-height:1.45;">Idea to a sharp, stress-tested brief in hours.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 11 THE IOS (dark) -->
+  <section data-label="The IOS" data-speaker-notes="Intelligence without a decision loop is just a bigger pile to read. The IOS routes insight into decisions.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <img src="./assets/asterisk-2.svg" aria-hidden="true" class="spinr breathe" style="position:absolute;bottom:-280px;left:-200px;width:700px;opacity:.1;filter:invert(53%) sepia(89%) saturate(3200%) hue-rotate(355deg);pointer-events:none;transform-origin:center;">
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:122px 120px 80px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#7884ff;margin-bottom:22px;">Layer 2 · The Intelligent Operating System</div>
+        <h2 style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.03;font-size:58px;margin:0 0 22px;max-width:1240px;">
+          <span class="rv"><span style="transition-delay:.05s;">Intelligence without a decision loop</span></span>
+          <span class="rv"><span style="transition-delay:.17s;color:#ff4f01;">is just a bigger pile to read.</span></span>
+        </h2>
+        <p class="fu" style="transition-delay:.36s;font-size:19px;line-height:1.55;color:#d9dbff;max-width:1060px;margin:0 0 32px;">The IOS sits above the nine packages. It takes what the intelligence surfaces and routes it into four recursive loops — so every insight lands in a decision, not just a deck.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
+          <div class="fu" style="transition-delay:.5s;border:1px solid rgba(250,245,234,.16);background:rgba(220,214,247,.05);border-radius:8px;padding:24px;"><div style="width:32px;height:3px;background:#ff4f01;border-radius:2px;margin-bottom:14px;"></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:#faf5ea;margin-bottom:8px;">Humans hold the spine</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">AI does variation inside language and frame. The senior leader&rsquo;s judgment about what, to whom, when — that is the asset.</div></div>
+          <div class="fu" style="transition-delay:.6s;border:1px solid rgba(250,245,234,.16);background:rgba(220,214,247,.05);border-radius:8px;padding:24px;"><div style="width:32px;height:3px;background:#ff4f01;border-radius:2px;margin-bottom:14px;"></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:#faf5ea;margin-bottom:8px;">Assets deepen, returns accelerate</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">Each loop generates data, analyzes it, and gets smarter next cycle. The function compounds; a stack of tools does not.</div></div>
+          <div class="fu" style="transition-delay:.7s;border:1px solid rgba(250,245,234,.16);background:rgba(220,214,247,.05);border-radius:8px;padding:24px;"><div style="width:32px;height:3px;background:#ff4f01;border-radius:2px;margin-bottom:14px;"></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;color:#faf5ea;margin-bottom:8px;">Significance stays human</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">AI scales ingestion. Make everything legible to AI — but the significance reading belongs to the person, not the system.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 FOUR LOOPS (dark) -->
+  <section data-label="Four loops" data-speaker-notes="The IOS turns intelligence into a rhythm — four recursive loops, each fed by specific packages.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:122px 120px 84px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:24px;">The Four Decision Loops · Nike Edition</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.02;font-size:52px;margin:0 0 42px;"><span style="transition-delay:.05s;">The IOS turns intelligence into a rhythm.</span></h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+          <div class="fu" style="transition-delay:.3s;background:rgba(120,132,255,.1);border:1px solid rgba(120,132,255,.3);border-left:4px solid #7884ff;border-radius:8px;padding:26px 30px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#aab2ff;">01</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#aa988f;">Packages 1 · 2 · 8</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:8px;">Narrative Intelligence Loop</div><div style="font-size:16px;line-height:1.5;color:#d9dbff;">Narrative health, cultural moment tracking, drift detection. Every leader enters every meeting already briefed on where the story stands.</div></div>
+          <div class="fu" style="transition-delay:.42s;background:rgba(120,132,255,.1);border:1px solid rgba(120,132,255,.3);border-left:4px solid #5b66e6;border-radius:8px;padding:26px 30px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#aab2ff;">02</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#aa988f;">Packages 3 · 5</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:8px;">Stakeholder Intelligence Loop</div><div style="font-size:16px;line-height:1.5;color:#d9dbff;">Reporter profiles, coverage patterns, posture shifts. No one goes into a media interaction cold; maps stay live, not rebuilt each cycle.</div></div>
+          <div class="fu" style="transition-delay:.54s;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.32);border-left:4px solid #a78bfa;border-radius:8px;padding:26px 30px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#c4b5fd;">03</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#aa988f;">Packages 4 · 6</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:8px;">Risk &amp; Response Loop</div><div style="font-size:16px;line-height:1.5;color:#d9dbff;">Policy watch, scenario planning, red team results. Risks surface proactively — not as fire drills. Responses ready before the question is asked.</div></div>
+          <div class="fu" style="transition-delay:.66s;background:rgba(255,79,1,.08);border:1px solid rgba(255,79,1,.3);border-left:4px solid #ff4f01;border-radius:8px;padding:26px 30px;"><div style="display:flex;align-items:baseline;gap:12px;margin-bottom:6px;"><span style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;">04</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#aa988f;">Packages 7 · 9</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px;margin-bottom:8px;">Execution Loop</div><div style="font-size:16px;line-height:1.5;color:#d9dbff;">Earnings prep, executive simulation, campaign briefing. The team executes with more prep time and sharper material — every cycle, without the heroics.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 13 MEETING SYSTEM (dark) -->
+  <section data-label="Meeting system" data-speaker-notes="Meetings start at decisions. AI handles the pre-brief, capture, and synthesis around them.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:122px 120px 80px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#7884ff;margin-bottom:24px;">The Meeting System Rebuilt</div>
+        <h2 style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1.02;font-size:56px;margin:0 0 16px;">
+          <span class="rv"><span style="transition-delay:.05s;">Meetings start at decisions.</span></span>
+          <span class="rv"><span style="transition-delay:.17s;color:#ff4f01;">AI handles the pre-brief.</span></span>
+        </h2>
+        <p class="fu" style="transition-delay:.34s;font-size:19px;line-height:1.5;color:#d9dbff;max-width:1040px;margin:0 0 38px;">Every recurring meeting gets an AI-generated pre-brief. All attendees arrive informed. The room is used entirely for decisions — not status.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:start;">
+          <div class="fu" style="transition-delay:.48s;border:1px solid rgba(250,245,234,.16);background:rgba(220,214,247,.05);border-radius:8px;padding:26px 28px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#7884ff;">Before</span><img src="./assets/arrows.svg" class="floaty" style="width:30px;filter:invert(56%) sepia(60%) saturate(2200%) hue-rotate(210deg);" aria-hidden="true"></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:#faf5ea;margin-bottom:14px;">AI generates the pre-brief</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;"><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#7884ff;font-weight:700;">&rsaquo;</span>Status on narrative health, decisions, competitive moves</li><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#7884ff;font-weight:700;">&rsaquo;</span>All attendees arrive informed — no status catch-up</li><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#7884ff;font-weight:700;">&rsaquo;</span>Meeting begins at decisions, not background</li></ul></div>
+          <div class="fu" style="transition-delay:.6s;border:1px solid rgba(250,245,234,.16);background:rgba(220,214,247,.05);border-radius:8px;padding:26px 28px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#a78bfa;">During</span><img src="./assets/arrows.svg" class="floaty" style="width:30px;filter:invert(70%) sepia(40%) saturate(900%) hue-rotate(220deg);animation-delay:.5s;" aria-hidden="true"></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:#faf5ea;margin-bottom:14px;">Focused on decisions only</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;"><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#a78bfa;font-weight:700;">&rsaquo;</span>Structured real-time capture of decisions and owners</li><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#a78bfa;font-weight:700;">&rsaquo;</span>No &ldquo;where are we?&rdquo; — AI handled that before you walked in</li><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#a78bfa;font-weight:700;">&rsaquo;</span>Action items assigned with owners immediately</li></ul></div>
+          <div class="fu" style="transition-delay:.72s;border:1px solid rgba(255,79,1,.3);background:rgba(255,79,1,.06);border-radius:8px;padding:26px 28px;"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#ff4f01;">After</span></div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:#faf5ea;margin-bottom:14px;">AI synthesizes and routes</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;"><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#ff4f01;font-weight:700;">&rsaquo;</span>Decisions and actions fed into the relevant loops</li><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#ff4f01;font-weight:700;">&rsaquo;</span>Next pre-brief automatically informed by this session</li><li style="position:relative;padding-left:16px;font-size:15px;line-height:1.45;color:#d9dbff;"><span style="position:absolute;left:0;color:#ff4f01;font-weight:700;">&rsaquo;</span>The loop improves with every cycle</li></ul></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 14 SIX PRINCIPLES (dark) -->
+  <section data-label="Six principles" data-speaker-notes="Six operating principles for an AI-informed communications function.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:122px 120px 84px 120px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:24px;">From Intelligence to Decisions</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1;font-size:52px;margin:0 0 40px;"><span style="transition-delay:.05s;">Six principles for an AI-informed comms function.</span></h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+          <div class="fu" style="transition-delay:.28s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-radius:8px;padding:24px 26px;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;margin-bottom:10px;">01</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Humans decide, AI informs</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">AI surfaces and suggests. Final judgment on messaging, relationships, and strategy belongs to the team.</div></div>
+          <div class="fu" style="transition-delay:.38s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-radius:8px;padding:24px 26px;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;margin-bottom:10px;">02</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Context compounds</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">Structured outputs make every next cycle smarter. Recursive loops compound over time.</div></div>
+          <div class="fu" style="transition-delay:.48s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-radius:8px;padding:24px 26px;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;margin-bottom:10px;">03</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Meetings are for decisions</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">If a meeting exists to share information that could be a pre-brief, it&rsquo;s unnecessary. AI handles the brief.</div></div>
+          <div class="fu" style="transition-delay:.58s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-radius:8px;padding:24px 26px;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;margin-bottom:10px;">04</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Relationships are human</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">Client trust, journalist relationships, and team culture are human achievements AI enhances but can&rsquo;t replace.</div></div>
+          <div class="fu" style="transition-delay:.68s;background:rgba(220,214,247,.05);border:1px solid rgba(250,245,234,.14);border-radius:8px;padding:24px 26px;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;margin-bottom:10px;">05</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Improve each loop, each cycle</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">Consistent measurable improvement — not perfection in year one. The system self-corrects as it runs.</div></div>
+          <div class="fu" style="transition-delay:.78s;background:rgba(255,79,1,.08);border:1px solid rgba(255,79,1,.3);border-radius:8px;padding:24px 26px;"><div style="font-family:'Syne',sans-serif;font-weight:800;font-size:26px;color:#ff4f01;margin-bottom:10px;">06</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:18px;margin-bottom:8px;">Burn cycles, not headcount</div><div style="font-size:15px;line-height:1.5;color:#d9dbff;">Before hiring to fix an information problem, ask whether a smarter loop can solve it instead.</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 15 ROADMAP (light accent) -->
+  <section data-label="Roadmap" data-speaker-notes="12 months, five phases. Each phase delivers value independently and feeds the next.">
+    <div style="position:absolute;inset:0;background:#faf5ea;color:#1a064b;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%231a064b' stroke-opacity='0.07' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-pos-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(26,6,75,.04);border:1px solid rgba(26,6,75,.12);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-l" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-l" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-l" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-l" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-l" data-on onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:116px 90px 64px 90px;display:flex;flex-direction:column;justify-content:center;">
+        <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:15px;letter-spacing:.22em;text-transform:uppercase;color:#ff4f01;margin-bottom:22px;">Implementation Roadmap</div>
+        <h2 class="rv" style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.03em;line-height:1;font-size:52px;margin:0 0 14px;"><span style="transition-delay:.05s;">12 months. Five phases.</span></h2>
+        <p class="fu" style="transition-delay:.3s;font-size:18px;line-height:1.5;color:rgba(26,6,75,.7);margin:0 0 38px;">No waiting for full rollout. Each phase stands alone and feeds the next.</p>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;">
+          <div class="fu" style="transition-delay:.4s;border:1px solid rgba(26,6,75,.12);border-radius:8px;overflow:hidden;background:#fff;"><div style="height:6px;background:#0c1d98;"></div><div style="padding:20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#0c1d98;margin-bottom:2px;">Phase 1</div><div style="font-size:13px;color:#aa988f;margin-bottom:10px;">Months 1–2</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:14px;">Foundation</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;"><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Audit where knowledge lives</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Select &amp; implement toolstack</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Build Pkg 1: Institutional Memory</li></ul></div></div>
+          <div class="fu" style="transition-delay:.5s;border:1px solid rgba(26,6,75,.12);border-radius:8px;overflow:hidden;background:#fff;"><div style="height:6px;background:#7884ff;"></div><div style="padding:20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7884ff;margin-bottom:2px;">Phase 2</div><div style="font-size:13px;color:#aa988f;margin-bottom:10px;">Months 3–4</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:14px;">Sensing Live</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;"><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Cultural &amp; Trend (Pkg 2)</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Competitive Coverage (Pkg 3)</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Policy &amp; Regulatory (Pkg 4)</li></ul></div></div>
+          <div class="fu" style="transition-delay:.6s;border:1px solid rgba(26,6,75,.12);border-radius:8px;overflow:hidden;background:#fff;"><div style="height:6px;background:#a78bfa;"></div><div style="padding:20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#7c4fd6;margin-bottom:2px;">Phase 3</div><div style="font-size:13px;color:#aa988f;margin-bottom:10px;">Months 5–6</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:14px;">Intel Activated</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;"><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Reporter &amp; Stakeholder (Pkg 5)</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>First AI meeting pre-briefs</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Decision capture live</li></ul></div></div>
+          <div class="fu" style="transition-delay:.7s;border:1px solid rgba(26,6,75,.12);border-radius:8px;overflow:hidden;background:#fff;"><div style="height:6px;background:#ff7a3c;"></div><div style="padding:20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#e8590c;margin-bottom:2px;">Phase 4</div><div style="font-size:13px;color:#aa988f;margin-bottom:10px;">Months 7–9</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:14px;">Simulation Engine</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;"><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Scenario &amp; Red Team (Pkg 6)</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Exec &amp; Earnings Sim (Pkg 7)</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Living Narrative (Pkg 8)</li></ul></div></div>
+          <div class="fu" style="transition-delay:.8s;border:1px solid rgba(26,6,75,.12);border-radius:8px;overflow:hidden;background:#fff;"><div style="height:6px;background:#ff4f01;"></div><div style="padding:20px;"><div style="font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#ff4f01;margin-bottom:2px;">Phase 5</div><div style="font-size:13px;color:#aa988f;margin-bottom:10px;">Months 10–12</div><div style="font-family:'Syne',sans-serif;font-weight:700;font-size:19px;margin-bottom:14px;">Full Activation</div><ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;"><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Campaign &amp; Agency Brief (Pkg 9)</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>First AI-suggested improvements</li><li style="position:relative;padding-left:14px;font-size:14px;line-height:1.4;color:rgba(26,6,75,.72);"><span style="position:absolute;left:0;color:#ff4f01;">·</span>Recursive loops end to end</li></ul></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 16 PAYOFF (dark) + image -->
+  <section data-label="The payoff" data-speaker-notes="This is what the Communications Big Bang looks like inside Nike. Next: walk the packages, prioritize, run the workshop.">
+    <div style="position:absolute;inset:0;background:#1a064b;color:#faf5ea;font-family:'Archivo',sans-serif;overflow:hidden;">
+      <div class="drift" style="position:absolute;inset:-80px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cpath d='M40 30v20M30 40h20' stroke='%23d9dbff' stroke-opacity='0.12' stroke-width='1'/%3E%3C/svg%3E&quot;);pointer-events:none;"></div>
+      <img src="./assets/asterisk-2.svg" aria-hidden="true" class="spin breathe" style="position:absolute;top:-220px;right:-180px;width:760px;opacity:.14;filter:invert(53%) sepia(89%) saturate(3200%) hue-rotate(355deg);pointer-events:none;transform-origin:center;">
+      <nav style="position:absolute;top:34px;left:64px;right:64px;height:50px;z-index:10;display:flex;align-items:center;justify-content:space-between;">
+        <img src="./assets/andus-logo-neg-horiz.svg" alt="Andus Labs" style="height:22px;">
+        <div style="display:flex;align-items:center;gap:4px;background:rgba(220,214,247,.07);border:1px solid rgba(250,245,234,.14);border-radius:999px;padding:5px;">
+          <button type="button" class="nv nv-d" onClick="{{ navOverview }}">Overview</button>
+          <button type="button" class="nv nv-d" onClick="{{ navChallenge }}">Challenge</button>
+          <button type="button" class="nv nv-d" onClick="{{ navSystem }}">The System</button>
+          <button type="button" class="nv nv-d" onClick="{{ navModel }}">Operating Model</button>
+          <button type="button" class="nv nv-d" data-on onClick="{{ navRoadmap }}">Roadmap</button>
+        </div>
+      </nav>
+      <div style="position:absolute;inset:0;z-index:4;box-sizing:border-box;padding:128px 120px 84px 120px;display:grid;grid-template-columns:1.25fr 0.75fr;gap:60px;align-items:center;">
+        <div>
+          <div class="fu" style="font-family:'JetBrains Mono',monospace;font-size:16px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#ff4f01;margin-bottom:28px;">The Self-Improving Comms Function</div>
+          <h1 style="font-family:'Syne',sans-serif;font-weight:800;letter-spacing:-.035em;line-height:1.0;font-size:74px;margin:0;">
+            <span class="rv"><span style="transition-delay:.05s;">This is the</span></span>
+            <span class="rv"><span style="transition-delay:.16s;">Communications Big Bang</span></span>
+            <span class="rv"><span style="transition-delay:.27s;color:#7884ff;">inside Nike.</span></span>
+          </h1>
+          <p class="fu" style="transition-delay:.56s;font-size:20px;line-height:1.55;color:#d9dbff;max-width:660px;margin:34px 0 38px;">Type G strategy: human + AI orchestration, where assets deepen and returns accelerate. Nine packages and four loops — the infrastructure that makes it real.</p>
+          <div class="fu" style="transition-delay:.7s;display:flex;gap:14px;flex-wrap:wrap;">
+            <span style="display:inline-flex;align-items:center;gap:10px;background:#7884ff;color:#1a064b;font-weight:700;font-size:16px;border-radius:999px;padding:13px 26px;">Walk the nine packages</span>
+            <span style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(250,245,234,.4);color:#faf5ea;font-weight:600;font-size:16px;border-radius:999px;padding:13px 26px;">Prioritize what matters</span>
+            <span style="display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(250,245,234,.4);color:#faf5ea;font-weight:600;font-size:16px;border-radius:999px;padding:13px 26px;">Run the workshop</span>
+          </div>
+        </div>
+        <div class="sc" style="transition-delay:.4s;position:relative;">
+          <div style="position:absolute;inset:auto auto -16px -16px;width:60px;height:60px;z-index:2;"><img src="./assets/asterisk-1.svg" class="spinr" style="width:100%;height:100%;filter:invert(56%) sepia(60%) saturate(2200%) hue-rotate(210deg);transform-origin:center;" aria-hidden="true"></div>
+          <image-slot id="payoff-image" style="width:100%;height:480px;display:block;" shape="rounded" radius="16" placeholder="Drop a documentary image — the Nike comms team in motion"></image-slot>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</x-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  go(n) {
+    return (e) => {
+      if (e && e.stopPropagation) e.stopPropagation();
+      const s = document.querySelector('deck-stage');
+      if (s && typeof s.goTo === 'function') s.goTo(n);
+    };
+  }
+  renderVals() {
+    return {
+      navOverview: this.go(0),
+      navChallenge: this.go(2),
+      navSystem: this.go(5),
+      navModel: this.go(10),
+      navRoadmap: this.go(14),
+    };
+  }
+}
+</script>
+</body>
+</html>
